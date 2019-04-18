@@ -12,26 +12,37 @@ def main():
 
     week = pd.read_csv('PBP2018Week1.csv', quotechar='"',)
     # avg = week.groupby(['down', 'distance'])['yardLine'].mean()
-    gen_drive_score(week, 401013357, 0)
-    gen_drive_score(week, 401013357, 1)
-    gen_drive_score(week, 401013357, 5)
+    print('drive_score = {}'.format(gen_drive_score(week, 401013357, 0))) # Nothing happens
+    print('drive_score = {}'.format(gen_drive_score(week, 401013357, 1))) # Touchdown on one play home
+    print('drive_score = {}'.format(gen_drive_score(week, 401013357, 5))) # Extended drive to touchdown home
+    print('drive_score = {}'.format(gen_drive_score(week, 401013357, 8))) # Field goal for away
+    print('drive_score = {}'.format(gen_drive_score(week, 401014972, 21))) # Safety
 
 
 def gen_drive_score(week, game_id, drive_index):
     drive = week.loc[(week['gameId'] == game_id) & (week['driveIndex'] == drive_index)]
-    scoring_play_frame = drive.loc[(drive['isScoringPlay'] == True)]
-    scoring_play = scoring_play_frame.iloc[0] if not scoring_play_frame.empty else None
+    scoring_play = get_scoring_play(drive)
 
     if scoring_play is None:
-        print("No score on this drive")
         return 0
 
     previous_play = get_previous_play(week, scoring_play)
-    print(previous_play)
+    home_has_possession = scoring_play.get('homeId') == scoring_play.get('offenseId')
+    home_score_difference = scoring_play.get('homeScore') - previous_play.get('homeScore')
+    away_score_difference = scoring_play.get('awayScore') - previous_play.get('awayScore')
+    if home_has_possession:
+        return home_score_difference - away_score_difference
+    else:
+        return away_score_difference - home_score_difference
+
+
+def get_scoring_play(drive):
+    scoring_play_frame = drive.loc[(drive['isScoringPlay'] == True)]
+    scoring_play = scoring_play_frame.iloc[0] if not scoring_play_frame.empty else None
+    return scoring_play
 
 
 def get_previous_play(week, current):
-    print()
     game_id = current.get('gameId')
     drive_index = current.get('driveIndex')
     play_index = current.get('playIndex')
@@ -45,7 +56,7 @@ def get_previous_play(week, current):
         previous_drive = week.loc[(week['gameId'] == game_id) & (week['driveIndex'] == previous_drive_index)]
         previous_play_index = previous_drive['playIndex'].max()
 
-    return week.loc[(week['gameId'] == game_id) & (week['driveIndex'] == previous_drive_index) & (week['playIndex'] == previous_play_index)]
+    return week.loc[(week['gameId'] == game_id) & (week['driveIndex'] == previous_drive_index) & (week['playIndex'] == previous_play_index)].iloc[0]
 
 if __name__ == "__main__":
     main()
