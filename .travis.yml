@@ -3,7 +3,7 @@ script:
 language: node_js
 deploy:
   provider: lambda
-  function_name: "lambdatest"
+  function_name: "testfunction"
   region: "us-east-1"
   role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
   runtime: "nodejs4.3"
