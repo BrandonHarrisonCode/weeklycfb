@@ -6,7 +6,7 @@ deploy:
   function_name: "testfunction"
   region: "us-east-1"
   role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
-  runtime: "python2.7"
+  runtime: "python3.7"
   handler_name: "my_func"
   module_name: "ExpectedPoints/handler"
   on:
