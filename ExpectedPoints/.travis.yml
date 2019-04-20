@@ -1,7 +1,0 @@
-deploy:
-  provider: lambda
-  function_name: "lambdatest"
-  region: "us-east-1"
-  role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
-  runtime: "nodejs4.3"
-  handler_name: "handler"
