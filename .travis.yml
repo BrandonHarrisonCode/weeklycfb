@@ -7,6 +7,7 @@ deploy:
   region: "us-east-1"
   role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
   runtime: "nodejs8.10"
-  handler_name: "ExpectedPoints/handler.testfunction"
+  handler_name: "my_func"
+  module_name: "ExpectedPoints/handler"
   on:
     branch: travisSetup
