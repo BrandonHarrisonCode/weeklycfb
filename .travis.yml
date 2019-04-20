@@ -1,5 +1,5 @@
 script:
-  ./configure && make
+
 language: node_js
 deploy:
   provider: lambda
