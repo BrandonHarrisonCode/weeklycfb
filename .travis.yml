@@ -1,12 +1,12 @@
 script:
   echo "SUCCESS"
-language: node_js
+language: python
 deploy:
   provider: lambda
   function_name: "testfunction"
   region: "us-east-1"
   role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
-  runtime: "nodejs8.10"
+  runtime: "python2.7"
   handler_name: "my_func"
   module_name: "ExpectedPoints/handler"
   on:
