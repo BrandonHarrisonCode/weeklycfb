@@ -1,3 +1,5 @@
+import json
+
 def my_func(event, context): 
     return {
         'statusCode': 200,
