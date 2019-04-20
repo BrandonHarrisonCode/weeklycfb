@@ -11,5 +11,5 @@ deploy:
   module_name: "ExpectedPoints/handler"
   on:
     branch: travisSetup
-after_success:
+after_deploy:
   diff -q <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) <(echo -n '{"username": "thisistheusername", "id": 12}')
