@@ -12,4 +12,4 @@ deploy:
   on:
     branch: travisSetup
 script:
-  diff -q <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) <(cat correct_function_out.txt)
+  diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
