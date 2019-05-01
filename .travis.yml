@@ -9,7 +9,7 @@ deploy:
   runtime: "python3.7"
   handler_name: "lambda_handler"
   local_dir: expectedPointsModule
-  module_name: "expectedPointsLambda"
+  module_name: "expectedPointsModule/expectedPointsLambda"
   on:
     branch: travisSetup
 
