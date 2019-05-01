@@ -8,7 +8,8 @@ deploy:
   role: "arn:aws:iam::098833178654:role/service-role/travisExpectedPoints-role-vuwmhpdz"
   runtime: "python3.7"
   handler_name: "lambda_handler"
-  module_name: "expectedPointsModule/expectedPointsLambda"
+  local_dir: expectedPointsModule
+  module_name: "expectedPointsLambda"
   on:
     branch: travisSetup
 
