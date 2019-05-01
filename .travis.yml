@@ -1,17 +1,30 @@
+env:
+  - BUILD=expectedPointsModule
+  - BUILD=computeScoreModule
 script:
   echo "SUCCESS"
+  cd $BUILD
 language: python
 deploy:
-  provider: lambda
-  function_name: "travisExpectedPoints"
-  region: "us-east-1"
-  role: "arn:aws:iam::098833178654:role/service-role/travisExpectedPoints-role-vuwmhpdz"
-  runtime: "python3.7"
-  handler_name: "lambda_handler"
-  local_dir: expectedPointsModule
-  module_name: "expectedPointsModule/expectedPointsLambda"
-  on:
-    branch: travisSetup
-
+  - provider: lambda
+    function_name: "travisExpectedPoints"
+    region: "us-east-1"
+    role: "arn:aws:iam::098833178654:role/service-role/travisExpectedPoints-role-vuwmhpdz"
+    runtime: "python3.7"
+    handler_name: "lambda_handler"
+    module_name: "expectedPointsLambda"
+    on:
+      branch: travisSetup
+      condition: BUILD = expectedPointsModule
+  - provider: lambda
+    function_name: "travisComputeScore"
+    region: "us-east-1"
+    role: "arn:aws:iam::098833178654:role/service-role/travisComputeScore-role-ym1r3hyc"
+    runtime: "python3.7"
+    handler_name: "lambda_handler"
+    module_name: "nexpectedPointsLambda"
+    on:
+      branch: travisSetup
+      condition: BUILD = computeScoreModule
 # after_deploy:
 #   diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
