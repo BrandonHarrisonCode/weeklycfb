@@ -24,7 +24,7 @@ deploy:
     role: "arn:aws:iam::098833178654:role/service-role/travisComputeScore-role-ym1r3hyc"
     runtime: "python3.7"
     handler_name: "lambda_handler"
-    module_name: "nexpectedPointsLambda"
+    module_name: "computeScoreLambda"
     on:
       branch: travisSetup
       condition: $BUILD = "computeScoreModule"
