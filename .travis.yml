@@ -1,11 +1,12 @@
 env:
-  - BUILD=expectedPointsModule
-  - BUILD=computeScoreModule
+  - BUILD="expectedPointsModule"
+  - BUILD="computeScoreModule"
 script:
   echo "SUCCESS"
   cd $BUILD
 language: python
 deploy:
+  skip_cleanup: true
   - provider: lambda
     function_name: "travisExpectedPoints"
     region: "us-east-1"
@@ -15,7 +16,7 @@ deploy:
     module_name: "expectedPointsLambda"
     on:
       branch: travisSetup
-      condition: BUILD = expectedPointsModule
+      condition: BUILD="expectedPointsModule"
   - provider: lambda
     function_name: "travisComputeScore"
     region: "us-east-1"
@@ -25,6 +26,6 @@ deploy:
     module_name: "nexpectedPointsLambda"
     on:
       branch: travisSetup
-      condition: BUILD = computeScoreModule
+      condition: BUILD="computeScoreModule"
 # after_deploy:
 #   diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
