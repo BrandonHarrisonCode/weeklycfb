@@ -2,8 +2,8 @@ env:
   - BUILD="expectedPointsModule"
   - BUILD="computeScoreModule"
 script:
-  echo "SUCCESS"
-  cd $BUILD
+  - cd $BUILD
+  - echo "SUCCESS"
 language: python
 deploy:
   - provider: lambda
