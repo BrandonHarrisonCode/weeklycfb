@@ -1,4 +1,3 @@
-import json
 import boto3
 from decimal import Decimal
 
@@ -8,26 +7,10 @@ downs = [dynamodb.Table('1stDowns'),
          dynamodb.Table('3rdDowns'),
          dynamodb.Table('4thDowns')]
 
-def lambda_handler(event, context):
-    down = event['Down']
-    yards_to_goal = event['YardsToGoal']
-    distance = event['Distance']
 
+def get_expected_points(down, yards_to_goal, distance):
     table = get_table(down)
-    ans = get_expected_points(table, yards_to_goal, distance)
 
-    return {
-        'statusCode': 200,
-        'body': ans
-    }
-
-
-def get_table(down):
-    down = validate_down(down)
-    return downs[down - 1]
-
-
-def get_expected_points(table, yards_to_goal, distance):
     yards_to_goal = str(validate_yards_to_goal(yards_to_goal))
     distance = str(validate_distance(distance))
 
@@ -36,6 +19,11 @@ def get_expected_points(table, yards_to_goal, distance):
     })
     ans = response['Item'][distance]
     return ans
+
+
+def get_table(down):
+    down = validate_down(down)
+    return downs[down - 1]
 
 
 def validate_down(down):
