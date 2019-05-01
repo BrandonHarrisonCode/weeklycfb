@@ -3,13 +3,13 @@ script:
 language: python
 deploy:
   provider: lambda
-  function_name: "testfunction"
+  function_name: "travisExpectedPoints"
   region: "us-east-1"
-  role: "arn:aws:iam::858228748133:role/cfbweekly-dev-us-east-1-lambdaRole"
+  role: "arn:aws:iam::098833178654:role/service-role/travisExpectedPoints-role-vuwmhpdz"
   runtime: "python3.7"
-  handler_name: "my_func"
-  module_name: "ExpectedPoints/handler"
+  handler_name: "lambda_handler"
+  module_name: "expectedPointsLambda"
   on:
     branch: travisSetup
-after_deploy:
-  diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
+# after_deploy:
+#   diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
