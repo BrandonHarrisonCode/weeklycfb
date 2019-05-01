@@ -11,5 +11,6 @@ deploy:
   module_name: "expectedPointsLambda"
   on:
     branch: travisSetup
+    
 # after_deploy:
 #   diff -Zq <(curl -s -X GET https://aapdu3qq48.execute-api.us-east-1.amazonaws.com/default/testfunction) correct_function_out.txt
