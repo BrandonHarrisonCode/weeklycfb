@@ -4,6 +4,7 @@ env:
 script:
   - cd $BUILD
   - echo "SUCCESS"
+  - echo $TRAVIS_BRANCH
 language: python
 deploy:
   - provider: lambda
