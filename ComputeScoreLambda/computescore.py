@@ -17,7 +17,7 @@ def compute_score(game):
     distance = get_distance(smoothed)
     print(distance)
     average_distance = distance / len(smoothed)
-    return average_distance
+    return average_distance, smoothed
 
 
 def create_plays_url(game):
