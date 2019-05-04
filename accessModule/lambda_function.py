@@ -21,15 +21,16 @@ class DecimalEncoder(json.JSONEncoder):
 This function returns a list of the games for a given season and week.
 """
 def lambda_handler(event, context):
-    yearweek = event['year'] + ":" + event['week']
-    response = table.query(
-        KeyConditionExpression=Key('year:week').eq(yearweek)
+	# This call should be coming from an AWS API-Gateway. Might want to find some way to check for this and fail otherwise.
+  yearweek = event['queryStringParameters']['year'] + ":" + event['queryStringParameters']['week']
+  response = table.query(
+      KeyConditionExpression=Key('year:week').eq(yearweek)
 	)
 	# Remove play by play score data from the response.
-    filtered_response = [{key:game_dict[key] for key in game_dict if key != 'play-by-play'} for game_dict in response['Items']]
-    return {
-	    'isBase64Encoded': False,
-        'statusCode': 200,
-        'headers': {},
-        'body': json.dumps(filtered_response, cls=DecimalEncoder)  
-    }
+  filtered_response = [{key:game_dict[key] for key in game_dict if key != 'play-by-play'} for game_dict in response['Items']]
+  return {
+    'isBase64Encoded': False,
+      'statusCode': 200,
+      'headers': {},
+      'body': json.dumps(filtered_response, cls=DecimalEncoder)  
+  }
