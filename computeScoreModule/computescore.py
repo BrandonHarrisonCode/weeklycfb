@@ -32,6 +32,8 @@ def get_plays(url):
     if not result.ok:
         raise IOError('Could not access API')
     plays = json.loads(result.content)
+    if len(plays) == 0:
+        raise ValueError('No plays found at {}'.format(url))
     return sorted(plays, key=itemgetter('id'))
 
 
