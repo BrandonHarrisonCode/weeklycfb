@@ -17,7 +17,8 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      condition: $BUILD = "accessModule" && $TRAVIS_BRANCH = mergeVersions
+      branch: mergeVersions
+      condition: $BUILD = "accessModule"
   - provider: lambda
     skip_cleanup: true
     function_name: "travisComputeScore"
@@ -27,7 +28,8 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      condition: $BUILD = "computeScoreModule" && $TRAVIS_BRANCH = mergeVersions
+      branch: mergeVersions
+      condition: $BUILD = "computeScoreModule"
   - provider: lambda
     skip_cleanup: true
     function_name: "travisComputeWeek"
@@ -37,7 +39,8 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      condition: $BUILD = "computeWeekModule" && $TRAVIS_BRANCH = mergeVersions
+      branch: mergeVersions
+      condition: $BUILD = "computeWeekModule"
   # - provider: lambda
   #   skip_cleanup: true
   #   function_name: "expectedPoints"
