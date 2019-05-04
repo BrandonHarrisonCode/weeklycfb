@@ -1,13 +1,9 @@
 import requests
 import json
 import boto3
-from computescore import compute_score
-from operator import itemgetter
-from decimal import Decimal
 
-dynamodb = boto3.resource('dynamodb')
-computed_score_table = dynamodb.Table('CalculatedScores')
-
+sqs = boto3.client('sqs')
+queue_url = 'https://sqs.us-east-1.amazonaws.com/098833178654/GamesQueue'
 
 def lambda_handler(event, context):
     year = int(event['year'])
@@ -23,8 +19,11 @@ def lambda_handler(event, context):
         print(e)
         return abort(400)
 
-    scores = get_scores(year, week, games)
-    print(sorted(scores, key=itemgetter('score'), reverse=True))
+    try:
+        push_messages(year, week, games)
+    except IOError as e:
+        print(e)
+        return abort(500)
 
     return {
         'statusCode': 200
@@ -57,28 +56,11 @@ def get_games(url):
     return games
 
 
-def get_scores(year, week, games):
-    scores = []
+def push_messages(year, week, games):
     for game in games:
-        try:
-            title = '{} vs. {}'.format(game['home_team'], game['away_team'])
-            print(title)
-            score, play_by_play = compute_score(game)
-            print('Final score: {}\n\n'.format(score))
-            scores.append({'title': title, 'score': score})
-            store_score(year, week, score, game, play_by_play)
-        except Exception as e:
-            print(e)
-    return scores
-
-
-def store_score(year, week, score, game, play_by_play):
-    computed_score_table.put_item(
-        Item={
-            'year:week': '{}:{}'.format(year, week),
-            'score': Decimal(str(score)),
-            'away': game['away_team'],
-            'home': game['home_team'],
-            'play-by-play': list(map(lambda x: Decimal(str(x)), play_by_play)),
-        }
-    )
+        response = sqs.send_message(
+            QueueUrl = queue_url,
+            MessageBody = json.dumps(game),
+        )
+        if not response:
+            raise IOError('Could not create a message for {}'.format(game))
