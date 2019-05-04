@@ -1,4 +1,9 @@
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('CalculatedScores')
 def lambda_handler(event, context):
-    return {
-        'statusCode': 200
-    }
+	response = table.query(
+    KeyConditionExpression=Key('year:week').eq("2018:13")
+	)
+	return response
