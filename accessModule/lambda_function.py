@@ -11,7 +11,9 @@ def lambda_handler(event, context):
 	response = table.query(
     KeyConditionExpression=Key('year:week').eq("2018:13")
 	)
+	# Remove play by play score data from the response.
+	filtered_response = [{key:game_dict[field] for key in game_dict if key != 'play-by-play'} for game_dict in response['Items']]
 	return {
       'statusCode': 200,
-      'data': response['Items']
-  }
+      'data': filtered_response    
+    }
