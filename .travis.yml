@@ -25,6 +25,7 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
+      all_branches: true
       condition: $BUILD = "computeScoreModule" && $TRAVIS_BRANCH = mergeVersions
   # - provider: lambda
   #   skip_cleanup: true
