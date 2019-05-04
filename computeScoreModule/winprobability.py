@@ -24,15 +24,13 @@ def win_probability(predicted_away_margin, scaled_vegas_line, scaled_std_dev_sco
     return prob_win
 
 
-def pregame_win_probability(home_team, vegas_line):
+def pregame_win_probability(vegas_line):
     return win_probability(0, -vegas_line, start_std_dev_scoring_margin)
 
 
-def postgame_win_probability(home_team, play):
-    print(play)
-    away_margin = extract_away_margin(home_team, play)
-    print(away_margin)
-    return 1.0 if away_margin < 0 else 0.0
+def postgame_win_probability(game):
+    margin = game['home_points'] - game['away_points']
+    return 1.0 if margin > 0 else 0.0
 
 # vegas_line is the amount that the home team is expected to win by * -1
 # expected points is negative if the home team has possession or positive otherwise
