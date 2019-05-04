@@ -6,6 +6,7 @@ from operator import itemgetter
 
 def compute_score(game):
     url = create_plays_url(game)
+    print('URL for play data: {}'.format(url))
     home_team = game['home_team']
     vegas_line = 0
 

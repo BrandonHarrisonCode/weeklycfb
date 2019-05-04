@@ -1,6 +1,7 @@
 env:
-  - BUILD="expectedPointsModule"
+  - BUILD="accessModule"
   - BUILD="computeScoreModule"
+  - BUILD="computeWeekModule"
 script:
   - cd $BUILD
   - echo "SUCCESS"
@@ -9,14 +10,15 @@ language: python
 deploy:
   - provider: lambda
     skip_cleanup: true
-    function_name: "travisExpectedPoints"
+    function_name: "travisAccessLambda"
     region: "us-east-1"
-    role: "arn:aws:iam::098833178654:role/service-role/travisExpectedPoints-role-vuwmhpdz"
+    role: "arn:aws:iam::098833178654:role/service-role/travisAccessLambda-role-nv869xlk"
     runtime: "python3.7"
     handler_name: "lambda_handler"
-    module_name: "expectedPointsLambda"
+    module_name: "lambda_function"
     on:
-      condition: $BUILD = "expectedPointsModule" && $TRAVIS_BRANCH = travisSetup
+      branch: mergeVersions
+      condition: $BUILD = "accessModule"
   - provider: lambda
     skip_cleanup: true
     function_name: "travisComputeScore"
@@ -24,9 +26,21 @@ deploy:
     role: "arn:aws:iam::098833178654:role/service-role/travisComputeScore-role-ym1r3hyc"
     runtime: "python3.7"
     handler_name: "lambda_handler"
-    module_name: "computeScoreLambda"
+    module_name: "lambda_function"
     on:
-      condition: $BUILD = "computeScoreModule" && $TRAVIS_BRANCH = travisSetup
+      branch: mergeVersions
+      condition: $BUILD = "computeScoreModule"
+  - provider: lambda
+    skip_cleanup: true
+    function_name: "travisComputeWeek"
+    region: "us-east-1"
+    role: "arn:aws:iam::098833178654:role/service-role/travisComputeWeek-role-iyd0l8vp"
+    runtime: "python3.7"
+    handler_name: "lambda_handler"
+    module_name: "lambda_function"
+    on:
+      branch: mergeVersions
+      condition: $BUILD = "computeWeekModule"
   # - provider: lambda
   #   skip_cleanup: true
   #   function_name: "expectedPoints"

@@ -29,6 +29,7 @@ def abort(statuscode):
         'statusCode': statuscode
     }
 
+
 def get_and_save_score(game):
     title = '{} vs. {}'.format(game['home_team'], game['away_team'])
     print(title)
