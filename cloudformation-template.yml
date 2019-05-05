@@ -43,8 +43,7 @@ Resources:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        -
-          "arn:aws:iam::098833178654:policy/service-role/AWSLambdaBasicExecutionRole-c69b7a60-2ad5-40fe-9ad0-552b817c48da"
+        - "arn:aws:iam::098833178654:policy/service-role/AWSLambdaBasicExecutionRole-c69b7a60-2ad5-40fe-9ad0-552b817c48da"
       Path: !Join [ '', [ '/', !Ref DeploymentStage, '/lambda/' ] ]
       Policies:
         -
@@ -55,22 +54,14 @@ Resources:
               -
                 Effect: Allow
                 Action:
-                  -
-                    sqs:DeleteMessage
-                    sqs:GetQueueUrl
-                    sqs:ChangeMessageVisibility
-                    sqs:SendMessageBatch
-                    sqs:ReceiveMessage
-                    sqs:SendMessage
-                    sqs:GetQueueAttributes
-                    sqs:ListQueueTags
-                    sqs:ListDeadLetterSourceQueues
-                    sqs:DeleteMessageBatch
-                    sqs:PurgeQueue
-                    sqs:DeleteQueue
-                    sqs:CreateQueue
-                    sqs:ChangeMessageVisibilityBatch
-                    sqs:SetQueueAttributes
+                  - sqs:GetQueueUrl
+                  - sqs:SendMessageBatch
+                  - sqs:ReceiveMessage
+                  - sqs:SendMessage
+                  - sqs:GetQueueAttributes
+                  - sqs:ListQueueTags
+                  - sqs:ListDeadLetterSourceQueues
+                  - sqs:ChangeMessageVisibilityBatch
                 Resource: !GetAtt GamesQueue.Arn
   ComputeScoreRole:
     Type: AWS::IAM::Role
@@ -96,10 +87,21 @@ Resources:
               -
                 Effect: Allow
                 Action:
-                  -
-                    dynamodb:BatchWriteItem,
-                    dynamodb:PutItem
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:PutItem
                 Resource: !GetAtt CalculatedScoresTable.Arn
+        -
+          PolicyName: GamesQueueRead
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: !GetAtt GamesQueue.Arn
   AccessRole:
     Type: AWS::IAM::Role
     Properties:
@@ -112,8 +114,7 @@ Resources:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        -
-          "arn:aws:iam::098833178654:policy/service-role/AWSLambdaBasicExecutionRole-c69b7a60-2ad5-40fe-9ad0-552b817c48da"
+        - "arn:aws:iam::098833178654:policy/service-role/AWSLambdaBasicExecutionRole-c69b7a60-2ad5-40fe-9ad0-552b817c48da"
       Path: !Join [ '', [ '/', !Ref DeploymentStage, '/lambda/' ] ]
       Policies:
         -
@@ -124,22 +125,21 @@ Resources:
               -
                 Effect: Allow
                 Action:
-                  -
-                    dynamodb:BatchGetItem
-                    dynamodb:ConditionCheckItem
-                    dynamodb:ListTagsOfResource
-                    dynamodb:Scan
-                    dynamodb:DescribeStream
-                    dynamodb:Query
-                    dynamodb:DescribeTimeToLive
-                    dynamodb:DescribeGlobalTableSettings
-                    dynamodb:DescribeTable
-                    dynamodb:DescribeGlobalTable
-                    dynamodb:GetShardIterator
-                    dynamodb:GetItem
-                    dynamodb:DescribeContinuousBackups
-                    dynamodb:DescribeBackup
-                    dynamodb:GetRecords
+                  - dynamodb:BatchGetItem
+                  - dynamodb:ConditionCheckItem
+                  - dynamodb:ListTagsOfResource
+                  - dynamodb:Scan
+                  - dynamodb:DescribeStream
+                  - dynamodb:Query
+                  - dynamodb:DescribeTimeToLive
+                  - dynamodb:DescribeGlobalTableSettings
+                  - dynamodb:DescribeTable
+                  - dynamodb:DescribeGlobalTable
+                  - dynamodb:GetShardIterator
+                  - dynamodb:GetItem
+                  - dynamodb:DescribeContinuousBackups
+                  - dynamodb:DescribeBackup
+                  - dynamodb:GetRecords
                 Resource: !GetAtt CalculatedScoresTable.Arn
 
 
@@ -155,7 +155,7 @@ Resources:
           QueueUrl: !Ref GamesQueue
       FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'ComputeWeekLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
-      Role: !Ref ComputeWeekRole
+      Role: !GetAtt ComputeWeekRole.Arn
       Runtime: python3.7
       Tags:
         -
@@ -174,7 +174,7 @@ Resources:
           CalculatedScoresTableName: !Ref CalculatedScoresTable
       FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'ComputeScoreLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
-      Role: !Ref ComputeScoreRole
+      Role: !GetAtt ComputeScoreRole.Arn
       Runtime: python3.7
       Tags:
         -
@@ -193,7 +193,7 @@ Resources:
           CalculatedScoresTableName: !Ref CalculatedScoresTable
       FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'AccessLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
-      Role: !Ref AccessRole
+      Role: !GetAtt AccessRole.Arn
       Runtime: python3.7
       Tags:
         -
@@ -228,6 +228,7 @@ Resources:
         -
           Key: Stage
           Value: !Ref DeploymentStage
+      VisibilityTimeout: 900
 
 
   CalculatedScoresTable:
@@ -236,19 +237,10 @@ Resources:
       AttributeDefinitions:
         -
           AttributeName: "year:week"
-          AttributeType: S
+          AttributeType: "S"
         -
           AttributeName: "score"
-          AttributeType: N
-        -
-          AttributeName: "away"
-          AttributeType: S
-        -
-          AttributeName: "home"
-          AttributeType: S
-        -
-          AttributeName: "play-by-play"
-          AttributeType: B
+          AttributeType: "N"
       BillingMode: PROVISIONED
       KeySchema:
         -
