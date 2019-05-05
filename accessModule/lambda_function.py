@@ -1,11 +1,13 @@
+import os
 import boto3
 import json
 import decimal
 
 from boto3.dynamodb.conditions import Key, Attr
 
+calculated_scores_table_name = os.environ['CalculatedScoresTableName']
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('CalculatedScores')
+table = dynamodb.Table(calculated_scores_table_name)
 
 # Helper class to convert a DynamoDB item to JSON.
 class DecimalEncoder(json.JSONEncoder):
@@ -32,5 +34,5 @@ def lambda_handler(event, context):
     'isBase64Encoded': False,
       'statusCode': 200,
       'headers': {},
-      'body': json.dumps(filtered_response, cls=DecimalEncoder)  
+      'body': json.dumps(filtered_response, cls=DecimalEncoder)
   }

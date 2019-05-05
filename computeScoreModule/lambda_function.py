@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 import boto3
@@ -5,8 +6,9 @@ from computescore import compute_score
 from operator import itemgetter
 from decimal import Decimal
 
+calculated_scores_table_name = os.environ['CalculatedScoresTableName']
 dynamodb = boto3.resource('dynamodb')
-computed_score_table = dynamodb.Table('CalculatedScores')
+calculated_score_table = dynamodb.Table(calculated_scores_table_name)
 
 
 def lambda_handler(event, context):
@@ -41,7 +43,7 @@ def get_and_save_score(game):
 
 
 def store_score(game, score, play_by_play):
-    computed_score_table.put_item(
+    calculated_score_table.put_item(
         Item={
             'year:week': '{}:{}'.format(game['season'], game['week']),
             'score': Decimal(str(score)),

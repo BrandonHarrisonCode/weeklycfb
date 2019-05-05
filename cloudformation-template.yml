@@ -3,10 +3,9 @@ Parameters:
     Type: String
     AllowedValues:
       - Dev
-      - Testing
       - Staging
       - Production
-    Description: Enter what type of deployment this is.  Either Dev, Testing, Staging, or Production.
+    Description: Enter what type of deployment this is.  Either Dev, Staging, or Production.
   S3CodeBucket:
     Type: String
     AllowedPattern: "(?=^.{3,63}$)(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)"
@@ -27,6 +26,9 @@ Parameters:
     AllowedPattern: ".+\\.zip"
     ConstraintDescription: Filename must end in .zip
     Description: The name of the code for the Access lambda in S3.
+
+Conditions:
+  IsDevelopment: !Equals [ !Ref DeploymentStage, Dev ]
 
 Resources:
   ComputeWeekRole:
@@ -148,7 +150,10 @@ Resources:
         S3Bucket: !Ref S3CodeBucket
         S3Key: !Ref ComputeWeekLambdaKey
       Description: Translates one week of games into several seperate games in a SQS queue.
-      FunctionName: !Join [ '-', [ !Ref DeploymentStage, 'ComputeWeekLambda' ] ]
+      Environment:
+        Variables:
+          QueueUrl: !Ref GamesQueue
+      FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'ComputeWeekLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
       Role: !Ref ComputeWeekRole
       Runtime: python3.7
@@ -164,7 +169,10 @@ Resources:
         S3Bucket: !Ref S3CodeBucket
         S3Key: !Ref ComputeScoreLambdaKey
       Description: Computes an entertainment score for each game and places into a DynamoDB table.
-      FunctionName: !Join [ '-', [ !Ref DeploymentStage, 'ComputeScoreLambda' ] ]
+      Environment:
+        Variables:
+          CalculatedScoresTableName: !Ref CalculatedScoresTable
+      FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'ComputeScoreLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
       Role: !Ref ComputeScoreRole
       Runtime: python3.7
@@ -180,7 +188,10 @@ Resources:
         S3Bucket: !Ref S3CodeBucket
         S3Key: !Ref AccessLambdaKey
       Description: Gets and returns a week of entertainment scores and games for a season.
-      FunctionName: !Join [ '-', [ !Ref DeploymentStage, 'AccessLambda' ] ]
+      Environment:
+        Variables:
+          CalculatedScoresTableName: !Ref CalculatedScoresTable
+      FunctionName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'AccessLambda' ] ] ]
       Handler: 'lambda_function.lambda_handler'
       Role: !Ref AccessRole
       Runtime: python3.7
@@ -201,7 +212,7 @@ Resources:
   DeadGamesQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Join [ '-', [ !Ref DeploymentStage, 'DeadLetterGamesQueue' ] ]
+      QueueName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'DeadLetterGamesQueue' ] ] ]
       Tags:
         -
           Key: Stage
@@ -209,7 +220,7 @@ Resources:
   GamesQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Join [ '-', [ !Ref DeploymentStage, 'GamesQueue' ] ]
+      QueueName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'GamesQueue' ] ] ]
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt DeadGamesQueue.Arn
         maxReceiveCount: 30
@@ -249,7 +260,7 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 3
-      TableName: !Join [ '-', [ !Ref DeploymentStage, 'CalculatedScores' ] ]
+      TableName: !If [IsDevelopment, !Ref "AWS::NoValue", !Join [ '-', [ !Ref DeploymentStage, 'CalculatedScores' ] ] ]
       Tags:
         -
           Key: Stage
