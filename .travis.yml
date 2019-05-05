@@ -1,7 +1,7 @@
 env:
   - BUILD="accessModule"
-  - BUILD="computeScoreModule"
-  - BUILD="computeWeekModule"
+#  - BUILD="computeScoreModule"
+#  - BUILD="computeWeekModule"
 script:
   - cd $BUILD
   - echo "SUCCESS"
@@ -17,7 +17,7 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      branch: mergeVersions
+      branch: accessBranch
       condition: $BUILD = "accessModule"
   - provider: lambda
     skip_cleanup: true
@@ -28,7 +28,7 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      branch: mergeVersions
+      branch: accessBranch
       condition: $BUILD = "computeScoreModule"
   - provider: lambda
     skip_cleanup: true
@@ -39,7 +39,7 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      branch: mergeVersions
+      branch: accessBranch
       condition: $BUILD = "computeWeekModule"
   # - provider: lambda
   #   skip_cleanup: true
