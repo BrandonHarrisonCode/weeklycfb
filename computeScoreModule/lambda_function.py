@@ -10,21 +10,14 @@ computed_score_table = dynamodb.Table('CalculatedScores')
 
 
 def lambda_handler(event, context):
-    year = int(event['year'])
-    week = int(event['week'])
-    base = 'https://api.collegefootballdata.com/games?seasonType=both&year={}&week={}'
-    url = base.format(year, week)
-    try:
-        games = get_games(url)
-    except IOError as e:
-        print(e)
-        return abort(500)
-    except ValueError as e:
-        print(e)
+    records = event['Records']
+    if len(records) > 1:
         return abort(400)
+    for record in event['Records']:
+       game = json.loads(str(record["body"]))
 
-    scores = get_scores(year, week, games)
-    print(sorted(scores, key=itemgetter('score'), reverse=True))
+    score = get_and_save_score(game)
+    print(score)
 
     return {
         'statusCode': 200
@@ -37,45 +30,20 @@ def abort(statuscode):
     }
 
 
-def get_games(url):
-    result = requests.get(url)
-    if not result.ok:
-        raise IOError('Could not access API with URL: {}'.format(url))
-    data = json.loads(result.content)
-    if not data:
-        raise ValueError('No games found with URL: {}'.format(url))
-    games = []
-    for game in data:
-        games.append({
-            'season': game['season'],
-            'week': game['week'],
-            'home_team': game['home_team'],
-            'away_team': game['away_team'],
-            'home_points': game['home_points'],
-            'away_points': game['away_points'],
-        })
-    return games
+def get_and_save_score(game):
+    title = '{} vs. {}'.format(game['home_team'], game['away_team'])
+    print(title)
+    score, play_by_play = compute_score(game)
+    print('Final score: {}\n\n'.format(score))
+    output = {'title': title, 'score': score}
+    store_score(game, score, play_by_play)
+    return output
 
 
-def get_scores(year, week, games):
-    scores = []
-    for game in games:
-        try:
-            title = '{} vs. {}'.format(game['home_team'], game['away_team'])
-            print(title)
-            score, play_by_play = compute_score(game)
-            print('Final score: {}\n\n'.format(score))
-            scores.append({'title': title, 'score': score})
-            store_score(year, week, score, game, play_by_play)
-        except Exception as e:
-            print(e)
-    return scores
-
-
-def store_score(year, week, score, game, play_by_play):
+def store_score(game, score, play_by_play):
     computed_score_table.put_item(
         Item={
-            'year:week': '{}:{}'.format(year, week),
+            'year:week': '{}:{}'.format(game['season'], game['week']),
             'score': Decimal(str(score)),
             'away': game['away_team'],
             'home': game['home_team'],

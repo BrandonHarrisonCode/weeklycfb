@@ -6,12 +6,13 @@ from operator import itemgetter
 
 def compute_score(game):
     url = create_plays_url(game)
+    print('URL for play data: {}'.format(url))
     home_team = game['home_team']
     vegas_line = 0
 
     plays = get_plays(url)
     win_probabilites = compute_win_probabilities(plays, home_team, vegas_line)
-    smoothed = get_smoothed_data(win_probabilites, home_team, vegas_line, plays)
+    smoothed = get_smoothed_data(win_probabilites, vegas_line, game)
     print([[x, smoothed[x]] for x in range(0, len(smoothed))])
 
     distance = get_distance(smoothed)
@@ -31,6 +32,8 @@ def get_plays(url):
     if not result.ok:
         raise IOError('Could not access API')
     plays = json.loads(result.content)
+    if len(plays) == 0:
+        raise ValueError('No plays found at {}'.format(url))
     return sorted(plays, key=itemgetter('id'))
 
 
@@ -43,10 +46,10 @@ def compute_win_probabilities(plays, home_team, vegas_line):
     return win_probabilites
 
 
-def get_smoothed_data(win_probabilites, home_team, vegas_line, plays):
+def get_smoothed_data(win_probabilites, vegas_line, game):
     smoothed = moving_average(win_probabilites, 3)
-    smoothed.insert(0, 1 - pregame_win_probability(home_team, vegas_line))
-    smoothed.append(1 - postgame_win_probability(home_team, plays[-1]))
+    smoothed.insert(0, 1 - pregame_win_probability(vegas_line))
+    smoothed.append(1 - postgame_win_probability(game))
     return smoothed
 
 
