@@ -22,6 +22,8 @@ This function returns a list of the games for a given season and week.
 """
 def lambda_handler(event, context):
 	# This call should be coming from an AWS API-Gateway. Might want to find some way to check for this and fail otherwise.
+	if not event['queryStringParameters'] or not event['queryStringParameters']['year'] or not event['queryStringParameters']['week']:
+		abort("Bad Request", 400);
 	yearweek = event['queryStringParameters']['year'] + ":" + event['queryStringParameters']['week']
 	response = table.query(
 			KeyConditionExpression=Key('year:week').eq(yearweek),
@@ -36,4 +38,14 @@ def lambda_handler(event, context):
 			"Access-Control-Allow-Origin": "*"
 		},
 		'body': json.dumps(response['Items'], cls=DecimalEncoder)  
+	}
+
+def abort(message, code):
+	return {
+		'isBase64Encoded': False,
+		'statusCode': code,
+		'headers': {            
+			"Access-Control-Allow-Origin": "*"
+		},
+		'body': json.dumps(message, cls=DecimalEncoder)  
 	}
