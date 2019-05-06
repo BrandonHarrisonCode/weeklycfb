@@ -69,7 +69,7 @@ function create_linechart(game_element_id) {
             title: 'Plays'
           },
           vAxis: {
-            title: `Probability of ${split_gid[1]} Win`
+            title: `Probability of ${data[0]['away']} Win`
           }
         };
 
