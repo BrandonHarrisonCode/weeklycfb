@@ -21,7 +21,7 @@ def retrieve_play_by_play(yearweek, score):
 	response = table.query(
 			ExpressionAttributeNames={"#pbp":"play-by-play"},
 			KeyConditionExpression=Key('year:week').eq(yearweek) & Key('score').eq(decimal.Decimal(score)),
-			ProjectionExpression="#pbp,home",
+			ProjectionExpression="#pbp,home,away",
 			ScanIndexForward=False,
 			Select="SPECIFIC_ATTRIBUTES"
 	)	
