@@ -17,7 +17,7 @@ deploy:
     handler_name: "lambda_handler"
     module_name: "lambda_function"
     on:
-      branch: accessBranch
+      branch: frontEnd
       condition: $BUILD = "accessModule"
   - provider: lambda
     skip_cleanup: true
