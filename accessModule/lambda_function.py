@@ -24,15 +24,16 @@ def lambda_handler(event, context):
 	# This call should be coming from an AWS API-Gateway. Might want to find some way to check for this and fail otherwise.
 	yearweek = event['queryStringParameters']['year'] + ":" + event['queryStringParameters']['week']
 	response = table.query(
-			KeyConditionExpression=Key('year:week').eq(yearweek)
+			KeyConditionExpression=Key('year:week').eq(yearweek),
+			ProjectionExpression="score,home,away",
+			ScanIndexForward=False,
+			Select="SPECIFIC_ATTRIBUTES"
 	)
-	# Remove play by play score data from the response.
-	filtered_response = [{key:game_dict[key] for key in game_dict if key != 'play-by-play'} for game_dict in response['Items']]
 	return {
 		'isBase64Encoded': False,
 		'statusCode': 200,
 		'headers': {            
 			"Access-Control-Allow-Origin": "*"
 		},
-		'body': json.dumps(filtered_response, cls=DecimalEncoder)  
+		'body': json.dumps(response['Items'], cls=DecimalEncoder)  
 	}
