@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DeploymentStage:
+    Type: String
+    AllowedValues:
+      - Dev
+      - Staging
+      - Production
+    Description: Enter what type of deployment this is.  Either Dev, Staging, or Production.
+
+Conditions:
+  IsDevelopment: !Equals [ !Ref DeploymentStage, Dev ]
+
+Globals:
+  Function:
+    Handler: 'lambda_function.lambda_handler'
+    Runtime: python3.7
+    Tags:
+      Stage: !Ref DeploymentStage
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  ComputeWeekLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: computeWeekModule/
+      Description: Translates one week of games into several seperate games in a SQS queue.
+      Environment:
+        Variables:
+          QueueUrl: !Ref GamesQueue
+      FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'ComputeWeekLambda' ] ]
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt GamesQueue.QueueName
+      Timeout: 10
+
+  ComputeScoreLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: computeScoreModule/
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadGamesQueue.Arn
+      Description: Computes an entertainment score for each game and places into a DynamoDB table.
+      Environment:
+        Variables:
+          CalculatedScoresTableName: !Ref CalculatedScoresTable
+      Events:
+        NewGameEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt GamesQueue.Arn
+            BatchSize: 1
+            Enabled: true
+      FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'ComputeScoreLambda' ] ]
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: 1stDowns
+        - DynamoDBReadPolicy:
+            TableName: 2ndDowns
+        - DynamoDBReadPolicy:
+            TableName: 3rdDowns
+        - DynamoDBReadPolicy:
+            TableName: 4thDowns
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CalculatedScoresTable
+      Timeout: 300
+
+  AccessLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: accessModule/
+      Description: Gets and returns a week of entertainment scores and games for a season.
+      Environment:
+        Variables:
+          CalculatedScoresTableName: !Ref CalculatedScoresTable
+      Events:
+        GetEntertainmentScore:
+          Type: Api
+          Properties:
+            Path: /entertainmentScores
+            Method: GET
+      FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AccessLambda' ] ]
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref CalculatedScoresTable
+      Timeout: 3
+
+  DeadGamesQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'DeadLetterGamesQueue' ] ]
+      Tags:
+        -
+          Key: Stage
+          Value: !Ref DeploymentStage
+  GamesQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'GamesQueue' ] ]
+      Tags:
+        -
+          Key: Stage
+          Value: !Ref DeploymentStage
+      VisibilityTimeout: 900
+
+  CalculatedScoresTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "year:week"
+          AttributeType: "S"
+        -
+          AttributeName: "score"
+          AttributeType: "N"
+      BillingMode: PROVISIONED
+      KeySchema:
+        -
+          AttributeName: "year:week"
+          KeyType: HASH
+        -
+          AttributeName: "score"
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 3
+      TableName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'CalculatedScores' ] ]
+      Tags:
+        -
+          Key: Stage
+          Value: !Ref DeploymentStage
+
+Outputs:
+  ApiURL:
+    Description: "API endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/entertainmentScores/"
