@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
 
     <title>Front End</title>
 
@@ -45,22 +46,41 @@
       request.onload = function() {
         // Begin accessing JSON data here
         var data = JSON.parse(this.response)
+
+        // Clear the old content. Apparently this is faster in Chrome now.
+        var shownError = document.getElementById('errorID')
+        if(shownError != null)
+          shownError.parentNode.removeChild(shownError)
         container.innerHTML = ''
+
         if (request.status >= 200 && request.status < 400) {
-          data.forEach(game => {
+          if(data != "") {
+            const ol = document.createElement('ol')
+            var num = 1
+            data.forEach(game => {
+              const li = document.createElement('li')
+              const span = document.createElement('span')
+              span.textContent = num++
 
-            const h1 = document.createElement('h1')
-            h1.textContent = game.away + " vs. " + game.home
+              const p = document.createElement('p')
+              p.textContent = `${game.away} vs. ${game.home}`
 
-            const p = document.createElement('p')
-            p.textContent = `${game.score}`
-
-            container.appendChild(h1)
-            container.appendChild(p)
-          })
+              li.appendChild(span)
+              li.appendChild(p)
+              ol.appendChild(li)
+            })
+            container.appendChild(ol)
+          }
+          else {
+            const errorMessage = document.createElement('p')
+            errorMessage.textContent = `We don't have data for that week.`
+            errorMessage.id = 'errorID'
+            app.appendChild(errorMessage)            
+          }
         } else {
-          const errorMessage = document.createElement('marquee')
+          const errorMessage = document.createElement('p')
           errorMessage.textContent = `Something went wrong.`
+          errorMessage.id = 'errorID'
           app.appendChild(errorMessage)
         }
       }
