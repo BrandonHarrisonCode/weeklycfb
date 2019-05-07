@@ -22,7 +22,6 @@ for(var i = 1; i < 17; i++) {
 
 
 function create_linechart(score) {
-  console.log("score = " + score)
   var listOfGames = document.getElementById('list_of_games')
 
   // TODO Return some error if listOfGames cannot be found
