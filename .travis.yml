@@ -3,13 +3,14 @@ before_install:
   - pip install aws-sam-cli
 script:
   - sam validate
-  - sam build
+  - sam build --use-container
   - sam package --output-template-file packaged.yml --s3-bucket cfb-game-of-the-week-zip-files
   - echo "SUCCESS"
   - echo This build was pushed from branch ${TRAVIS_BRANCH}.
 language: python
 deploy:
   - provider: script
+    skip_cleanup: true
     script: sam deploy --template-file packaged.yml --stack-name CloudFormationVer3 --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=Dev
     on:
       branch: travisUpdate
