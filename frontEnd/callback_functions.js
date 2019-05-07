@@ -1,7 +1,14 @@
 const factor = 10
+const genericError = 'Something went wrong. Please try again.'
+const replaceErrorString = 'ELEM'
+const cannotFindElementError = 'The element ' + replaceErrorString + ' could not be found. Please try refreshing.'
+const cannotFindErrorBannerError = 'The error banner could not be found. Please try refreshing.'
+const listDivId = 'list_div'
+const chartDivId = 'chart_div'
+const errorBannerId = 'error_banner'
 
 function select_correct_game(data) {
-  var chartDiv = document.getElementById('chart_div')
+  var chartDiv = document.getElementById(chartDivId)
   if(data == null || chartDiv == null)
     return null
   else {
@@ -16,7 +23,7 @@ function select_correct_game(data) {
 function drawBasic(data) {
   var game = select_correct_game(data)
   var table = new google.visualization.DataTable()
-  var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
+  var chart = new google.visualization.LineChart(document.getElementById(chartDivId))
 
   if(game != null && table != null && chart != null) {
     var awayTeamName = game['away']
@@ -45,27 +52,36 @@ function drawBasic(data) {
 
     chart.draw(table, options)
   }
+  else {
+    display_element_missing_error(chartDivId)
+  }
+}
+
+function display_element_missing_error(missingElementId) {
+  display_error(statusCode=null, errorText=cannotFindElementError.replace(replaceErrorString, missingElementId))
 }
 
 // Display an error in the error_banner.
 // Adding an error to the error_banner will remove any previous errors,
 // though they will be logged.
 
-function display_error(statusCode) {
-  var errorDiv = document.getElementById('error_banner')
+function display_error(statusCode='', errorText=genericError) {
+  var errorDiv = document.getElementById(errorBannerId)
   var errorMessage = document.createElement('p')
 
-  console.log('Something went wrong. Error: ' + statusCode)
+  if(statusCode != '')
+    statusCode = ` Error Code: $statusCode`
 
-  if(errorDiv) {
+  console.log(errorText + statusCode)
+
+  if(errorDiv != null) {
     errorDiv.innerHTML = ''
 
-    errorMessage.textContent = 'Something went wrong. Error: ' + statusCode
-    errorMessage.id = 'errorID'
+    errorMessage.textContent = errorText + statusCode
     errorDiv.appendChild(errorMessage)
   }
   else {
-    console.log('Error: Cannot find the error banner.')
+    console.log(cannotFindErrorBannerError)
   }
 }
 
@@ -95,9 +111,9 @@ function calculate_new_score(top_score, score) {
 }
 
 function onload_generate_list(response, data) {
-  var container = document.getElementById('list_div')
+  var listDiv = document.getElementById(listDivId)
 
-  if(container != null) {
+  if(listDiv != null) {
 
     if(data != "") {
       var ol = document.createElement('ol')
@@ -135,14 +151,16 @@ function onload_generate_list(response, data) {
       ol.setAttribute('year', split_date[0])
       ol.setAttribute('week', split_date[1])
 
-      container.innerHTML = ''
-      container.appendChild(ol)
+      listDiv.innerHTML = ''
+      listDiv.appendChild(ol)
     }
     else {
       const errorMessage = document.createElement('p')
       errorMessage.textContent = `We don't have data for that week.`
-      errorMessage.id = 'errorID'
-      app.appendChild(errorMessage)            
+      errorDiv.appendChild(errorMessage)            
     }
   } 
+  else {
+    display_element_missing_error(listDivId)
+  }
 }
