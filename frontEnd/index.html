@@ -11,10 +11,15 @@
 
   <body>
     <div id="error_banner"></div>
-    Year: <select id="year_dropdown" onchange="retrieve_data()"></select>
-    Week: <select id="week_dropdown" onchange="retrieve_data()"></select>
+
+    <div id="selection_div">
+    Year: <select id="year_dropdown"></select>
+    Week: <select id="week_dropdown"></select>
+    <button id="submit_button" onclick="retrieve_data()">SMASH THAT LIKE BUTTON</button>
+    </div>
+
     <div id="chart_div"></div>
-    <div id="root"></div>
+    <div id="list_div"></div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src=callback_functions.js></script>
     <script src=script.js></script>
