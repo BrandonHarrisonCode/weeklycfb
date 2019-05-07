@@ -4,11 +4,11 @@ before_install:
   - pip install awscli
   - pip install aws-sam-cli
 script:
+  - sam --version
   - sam validate
-  - sam build --use-container
+  - sam build
   - sam package --output-template-file packaged.yml --s3-bucket cfb-game-of-the-week-zip-files
-  - sam deploy --template-file packaged.yml --stack-name CloudFormationVer4 --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=Dev > out.txt
-  - cat out.txt
+  - sam deploy --template-file packaged.yml --stack-name CloudFormationVer4 --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=Dev
   - echo "SUCCESS"
   - echo This build was pushed from branch ${TRAVIS_BRANCH}.
 # deploy:
