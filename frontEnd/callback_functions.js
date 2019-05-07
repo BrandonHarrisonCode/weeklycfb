@@ -2,7 +2,7 @@ const factor = 10
 
 function drawBasic(data) {
   // TODO make sure data is not null
-  var table = new google.visualization.DataTable();
+  var table = new google.visualization.DataTable()
   var awayTeamName = data[0]['away']
   var playByPlayData = data[0]['play-by-play']
 
@@ -14,12 +14,11 @@ function drawBasic(data) {
     return [playNumber, winProbabilityForAwayTeam]
   })
 
-  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
 
-  table.addColumn('number', 'Plays');
-  table.addColumn('number', `Probability of ${awayTeamName} Win`);
-
-  table.addRows(probabilityData);
+  table.addColumn('number', 'Plays')
+  table.addColumn('number', `Probability of ${awayTeamName} Win`)
+  table.addRows(probabilityData)
 
   var options = {
     hAxis: {
@@ -30,8 +29,7 @@ function drawBasic(data) {
     }
   }
 
-
-  chart.draw(table, options);
+  chart.draw(table, options)
 }
 
 // Display an error in the error_banner.
@@ -73,8 +71,8 @@ function onload_wrapper(f, request, response) {
 }
 
 function onload_generate_graph(response, data) {
-  google.charts.load('current', {packages: ['corechart', 'line']});
-  google.charts.setOnLoadCallback(function() { drawBasic(data) });
+  google.charts.load('current', {packages: ['corechart', 'line']})
+  google.charts.setOnLoadCallback(function() { drawBasic(data) })
 }
 
 function calculate_new_score(top_score, score) {
