@@ -1,35 +1,51 @@
 const factor = 10
 
+function select_correct_game(data) {
+  var chartDiv = document.getElementById('chart_div')
+  if(data == null || chartDiv == null)
+    return null
+  else {
+    for(var i = 0; i < data.length; i++) {
+      if(data[i].away === chartDiv.getAttribute('away'))
+        return data[i]
+    }
+  }
+  return null
+}
+
 function drawBasic(data) {
   // TODO make sure data is not empty
+  var game = select_correct_game(data)
   var table = new google.visualization.DataTable()
   var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
 
-  var awayTeamName = data[0]['away']
-  var playByPlayData = data[0]['play-by-play']
+  if(game != null && table != null && chart != null) {
+    var awayTeamName = game['away']
+    var playByPlayData = game['play-by-play']
 
-  // Create an array of arrays of the form [playNumber, winProbabilityForAwayTeam]
-  // Note that the 0th play is dropped because all teams start with a 50/50 chance of winning.
-  var probabilityData = playByPlayData.map(function(winProbabilityForAwayTeam, playNumber) {
-    if(playNumber == 0)
-      return null
-    return [playNumber, winProbabilityForAwayTeam]
-  })
+    // Create an array of arrays of the form [playNumber, winProbabilityForAwayTeam]
+    // Note that the 0th play is dropped because all teams start with a 50/50 chance of winning.
+    var probabilityData = playByPlayData.map(function(winProbabilityForAwayTeam, playNumber) {
+      if(playNumber == 0)
+        return null
+      return [playNumber, winProbabilityForAwayTeam]
+    })
 
-  table.addColumn('number', 'Plays')
-  table.addColumn('number', `Probability of ${awayTeamName} Win`)
-  table.addRows(probabilityData)
+    table.addColumn('number', 'Plays')
+    table.addColumn('number', `Probability of ${awayTeamName} Win`)
+    table.addRows(probabilityData)
 
-  var options = {
-    hAxis: {
-      title: 'Plays'
-    },
-    vAxis: {
-      title: `Probability of ${awayTeamName} Win`
+    var options = {
+      hAxis: {
+        title: 'Plays'
+      },
+      vAxis: {
+        title: `Probability of ${awayTeamName} Win`
+      }
     }
-  }
 
-  chart.draw(table, options)
+    chart.draw(table, options)
+  }
 }
 
 // Display an error in the error_banner.
@@ -99,7 +115,7 @@ function onload_generate_list(response, data) {
         var li = null
 
         li = document.createElement('li')
-        li.onclick = function() { create_linechart(game.score) }
+        li.onclick = function() { create_linechart(game.score, game.away) }
 
         span = document.createElement('span')
         span.textContent = num++
