@@ -5,6 +5,7 @@ const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/defaul
 const year_dropdown = document.getElementById('year_dropdown')
 const week_dropdown = document.getElementById('week_dropdown')
 
+// TODO make these build via function calls for easy change to dynamic build later
 var year_list = ["2017", "2018"]
 var option_text
 for(option_text in year_list) {
@@ -20,17 +21,15 @@ for(var i = 1; i < 17; i++) {
 }
 
 
-function create_linechart(game_element_id) {
-  var split_gid = game_element_id.split(':')
-  console.log("game.score = " + split_gid[0])
-  console.log("game.away = " + split_gid[1])
+function create_linechart(score) {
+  console.log("score = " + score)
   var listOfGames = document.getElementById('list_of_games')
 
-  // Return some error if listOfGames cannot be found
+  // TODO Return some error if listOfGames cannot be found
   if(listOfGames != null) {
     var request = new XMLHttpRequest()
 
-    request.open('GET', lambdaURL + '?year=' + listOfGames.getAttribute('year') + '&week=' + listOfGames.getAttribute('week') + '&score=' + split_gid[0], true)
+    request.open('GET', lambdaURL + '?year=' + listOfGames.getAttribute('year') + '&week=' + listOfGames.getAttribute('week') + '&score=' + score, true)
     request.onload = function() { onload_wrapper(onload_generate_graph, request, this.response) }
     request.send()
   }

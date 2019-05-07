@@ -1,8 +1,10 @@
 const factor = 10
 
 function drawBasic(data) {
-  // TODO make sure data is not null
+  // TODO make sure data is not empty
   var table = new google.visualization.DataTable()
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
+
   var awayTeamName = data[0]['away']
   var playByPlayData = data[0]['play-by-play']
 
@@ -13,8 +15,6 @@ function drawBasic(data) {
       return null
     return [playNumber, winProbabilityForAwayTeam]
   })
-
-  var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
 
   table.addColumn('number', 'Plays')
   table.addColumn('number', `Probability of ${awayTeamName} Win`)
@@ -96,27 +96,23 @@ function onload_generate_list(response, data) {
       data.forEach(game => {
         // This is wrapped in a function so that we can create a closure.
         // Otherwise, li.id will change and we will create the wrong line chart.
-        (function() {
-          var li = null
+        var li = null
 
-          li = document.createElement('li')
-          li.id = `${game.score}:${game.home}`
-          li.onclick = function() { create_linechart(li.id) }
+        li = document.createElement('li')
+        li.onclick = function() { create_linechart(game.score, game.away) }
 
-          span = document.createElement('span')
-          span.textContent = num++
+        span = document.createElement('span')
+        span.textContent = num++
 
-          p = document.createElement('p')
+        p = document.createElement('p')
 
-          score = calculate_new_score(top_score, game.score)
+        score = calculate_new_score(top_score, game.score)
 
-          p.textContent = `${game.away} vs. ${game.home} : ${score}`
+        p.textContent = `${game.away} vs. ${game.home} : ${score}`
 
-          li.appendChild(span)
-          li.appendChild(p)
-          ol.appendChild(li)
-        })()
-
+        li.appendChild(span)
+        li.appendChild(p)
+        ol.appendChild(li)
       })
 
       // Give ol some properties that we can refer back to for caching purposes.
