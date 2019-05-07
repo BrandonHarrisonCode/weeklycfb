@@ -1,4 +1,5 @@
 before_install:
+  - pip install awscli
   - pip install aws-sam-cli
 script:
   - echo "SUCCESS"
