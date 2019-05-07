@@ -87,7 +87,7 @@ function onload_generate_list(response, data) {
       var span = null
       var p = null
       var score = null
-      var split_date = data.yearweek.split(':')
+      var split_date = response.yearweek.split(':')
 
       data.forEach(game => {
         // This is wrapped in a function so that we can create a closure.
