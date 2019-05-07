@@ -1,29 +1,35 @@
 const factor = 10
 
 function drawBasic(data) {
+  // TODO make sure data is not null
   var table = new google.visualization.DataTable();
-  table.addColumn('number', 'Plays');
-  table.addColumn('number', `Probability of ${data[0]['away']} Win`);
+  var awayTeamName = data[0]['away']
+  var playByPlayData = data[0]['play-by-play']
 
-  var arr = data[0]['play-by-play']
-  var prob_array = arr.map(function(elem, index) {
-    if(index == 0)
+  // Create an array of arrays of the form [playNumber, winProbabilityForAwayTeam]
+  // Note that the 0th play is dropped because all teams start with a 50/50 chance of winning.
+  var probabilityData = playByPlayData.map(function(winProbabilityForAwayTeam, playNumber) {
+    if(playNumber == 0)
       return null
-    return [index, elem]
+    return [playNumber, winProbabilityForAwayTeam]
   })
 
-  table.addRows(prob_array);
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+  table.addColumn('number', 'Plays');
+  table.addColumn('number', `Probability of ${awayTeamName} Win`);
+
+  table.addRows(probabilityData);
 
   var options = {
     hAxis: {
       title: 'Plays'
     },
     vAxis: {
-      title: `Probability of ${data[0]['away']} Win`
+      title: `Probability of ${awayTeamName} Win`
     }
   }
 
-  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
   chart.draw(table, options);
 }
