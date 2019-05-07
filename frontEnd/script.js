@@ -1,5 +1,5 @@
 const app = document.getElementById('list_div')
-
+const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda'
 var yearweek = null
 
 //Create dropdown menus
@@ -21,21 +21,25 @@ for(var i = 1; i < 17; i++) {
 }
 
 
-function create_linechart(game_element_id, yearweek) {
+function create_linechart(game_element_id) {
   var split_gid = game_element_id.split(':')
   console.log("game.score = " + split_gid[0])
   console.log("game.away = " + split_gid[1])
-  var split_ywk = yearweek.split(':')
-  var request = new XMLHttpRequest()
+  var listOfGames = document.getElementById('list_of_games')
 
-  request.open('GET', 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda?year=' + split_ywk[0] + '&week=' + split_ywk[1] + '&score=' + split_gid[0], true)
-  request.onload = function() { onload_wrapper(onload_generate_graph, request, this.response) }
-  request.send()
+  // Return some error if listOfGames cannot be found
+  if(listOfGames != null) {
+    var request = new XMLHttpRequest()
+
+    request.open('GET', lambdaURL + '?year=' + listOfGames.getAttribute('year') + '&week=' + listOfGames.getAttribute('week') + '&score=' + split_gid[0], true)
+    request.onload = function() { onload_wrapper(onload_generate_graph, request, this.response) }
+    request.send()
+  }
 }
 
 function retrieve_data() {
   var request = new XMLHttpRequest()
-  request.open('GET', 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda?year=' + year_dropdown.value + '&week=' + week_dropdown.value, true)
+  request.open('GET', lambdaURL + '?year=' + year_dropdown.value + '&week=' + week_dropdown.value, true)
   request.onload = function() { onload_wrapper(onload_generate_list, request, this.response)}
   request.send()
 }
