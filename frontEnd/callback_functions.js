@@ -14,7 +14,6 @@ function select_correct_game(data) {
 }
 
 function drawBasic(data) {
-  // TODO make sure data is not empty
   var game = select_correct_game(data)
   var table = new google.visualization.DataTable()
   var chart = new google.visualization.LineChart(document.getElementById('chart_div'))
