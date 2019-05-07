@@ -1,4 +1,4 @@
-const app = document.getElementById('root')
+const app = document.getElementById('list_div')
 
 var yearweek = null
 
@@ -19,11 +19,6 @@ for(var i = 1; i < 17; i++) {
   option.text = i
   week_dropdown.add(option)
 }
-
-const container = document.createElement('div')
-container.setAttribute('class', 'container')
-
-app.appendChild(container)
 
 
 function create_linechart(game_element_id, yearweek) {
