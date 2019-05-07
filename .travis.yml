@@ -31,6 +31,6 @@ deploy:
   provider: s3
   bucket: "cfbgameoftheweek.com"
   skip_cleanup: true
-  upload-dir: frontEnd
+  local-dir: frontEnd
   on:
     branch: travisUpdate
