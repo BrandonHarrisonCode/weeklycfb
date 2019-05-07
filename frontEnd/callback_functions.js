@@ -59,14 +59,14 @@ function onload_wrapper(f, request, response) {
     var response = JSON.parse(response)
     var data = response.data
     var yearweek = response.yearweek
-    f(response, data, yearweek)  
+    f(response, data)  
   }
   else {
     display_error(request.status)
   }
 }
 
-function onload_generate_graph(response, data, yearweek) {
+function onload_generate_graph(response, data) {
   google.charts.load('current', {packages: ['corechart', 'line']});
   google.charts.setOnLoadCallback(function() { drawBasic(data) });
 }
@@ -75,7 +75,7 @@ function calculate_new_score(top_score, score) {
   return 100*Math.pow(factor, 1+15*score)/top_score
 }
 
-function onload_generate_list(response, data, yearweek) {
+function onload_generate_list(response, data) {
   var container = document.getElementById('list_div')
 
   if(container != null) {
@@ -87,6 +87,7 @@ function onload_generate_list(response, data, yearweek) {
       var span = null
       var p = null
       var score = null
+      var split_date = data.yearweek.split(':')
 
       data.forEach(game => {
         // This is wrapped in a function so that we can create a closure.
@@ -96,7 +97,7 @@ function onload_generate_list(response, data, yearweek) {
 
           li = document.createElement('li')
           li.id = `${game.score}:${game.home}`
-          li.onclick = function() { create_linechart(li.id, yearweek) }
+          li.onclick = function() { create_linechart(li.id) }
 
           span = document.createElement('span')
           span.textContent = num++
@@ -116,7 +117,8 @@ function onload_generate_list(response, data, yearweek) {
 
       // Give ol some properties that we can refer back to for caching purposes.
       ol.id = 'list_of_games'
-      ol.setAttribute('date', yearweek)
+      ol.setAttribute('year', split_date[0])
+      ol.setAttribute('week', split_date[1])
 
       container.innerHTML = ''
       container.appendChild(ol)
