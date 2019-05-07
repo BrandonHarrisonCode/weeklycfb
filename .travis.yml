@@ -9,6 +9,7 @@ deploy:
   bucket: "cfbgameoftheweek.com"
   skip_cleanup: true
   local-dir: frontEnd
+  upload-dir: ${TRAVIS_BRANCH}WebResources
   acl: public_read
   on:
     branch: travisUpdate
