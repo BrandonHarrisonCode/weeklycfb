@@ -1,3 +1,5 @@
+set -e
+
 if [ $TRAVIS_BRANCH -eq "master" ] then
   STACKNAME="ProductionStack"
   DEPLOYMENTSTAGE="Production"
