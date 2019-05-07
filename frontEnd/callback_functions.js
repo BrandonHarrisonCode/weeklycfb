@@ -76,8 +76,7 @@ function calculate_new_score(top_score, score) {
 }
 
 function onload_generate_list(response, data, yearweek) {
-  // Clear the old content. Apparently this is faster in Chrome now.
-  var container = document.getElementById('root')
+  var container = document.getElementById('list_div')
 
   if(container != null) {
 
@@ -90,7 +89,9 @@ function onload_generate_list(response, data, yearweek) {
       var score = null
 
       data.forEach(game => {
-        var func = function() {
+        // This is wrapped in a function so that we can create a closure.
+        // Otherwise, li.id will change and we will create the wrong line chart.
+        (function() {
           var li = null
 
           li = document.createElement('li')
@@ -109,11 +110,15 @@ function onload_generate_list(response, data, yearweek) {
           li.appendChild(span)
           li.appendChild(p)
           ol.appendChild(li)
-        }
-        func()
-      })
-      container.innerHTML = ''
+        })()
 
+      })
+
+      // Give ol some properties that we can refer back to for caching purposes.
+      ol.id = 'list_of_games'
+      ol.setAttribute('date', yearweek)
+
+      container.innerHTML = ''
       container.appendChild(ol)
     }
     else {
