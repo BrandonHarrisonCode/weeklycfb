@@ -1,6 +1,5 @@
 const app = document.getElementById('list_div')
 const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda'
-var yearweek = null
 
 //Create dropdown menus
 const year_dropdown = document.getElementById('year_dropdown')
