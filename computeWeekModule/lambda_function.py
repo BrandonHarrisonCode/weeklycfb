@@ -1,9 +1,10 @@
+import os
 import requests
 import json
 import boto3
 
 sqs = boto3.client('sqs')
-queue_url = 'https://sqs.us-east-1.amazonaws.com/098833178654/GamesQueue'
+queue_url = os.environ['QueueUrl']
 
 def lambda_handler(event, context):
     year = int(event['year'])
