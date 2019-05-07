@@ -1,63 +1,16 @@
-env:
-  - BUILD="accessModule"
-#  - BUILD="computeScoreModule"
-#  - BUILD="computeWeekModule"
-script:
-  - cd $BUILD
-  - echo "SUCCESS"
-  - echo This build was pushed from branch ${TRAVIS_BRANCH}.
 language: python
+python: "3.6"
+before_install:
+  - pip install awscli
+  - pip install aws-sam-cli
+script: . deployCloudFormation.sh
 deploy:
-  - provider: lambda
+  - provider: s3
+    bucket: ${WEB_BUCKET_NAME}
     skip_cleanup: true
-    function_name: "travisAccessLambda"
-    region: "us-east-1"
-    role: "arn:aws:iam::098833178654:role/service-role/travisAccessLambda-role-nv869xlk"
-    runtime: "python3.7"
-    handler_name: "lambda_handler"
-    module_name: "lambda_function"
+    local-dir: frontEnd
+    upload-dir: ${FOLDER_NAME}
+    acl: public_read
     on:
-      branch: frontEnd
-      condition: $BUILD = "accessModule"
-  - provider: lambda
-    skip_cleanup: true
-    function_name: "travisComputeScore"
-    region: "us-east-1"
-    role: "arn:aws:iam::098833178654:role/service-role/travisComputeScore-role-ym1r3hyc"
-    runtime: "python3.7"
-    handler_name: "lambda_handler"
-    module_name: "lambda_function"
-    on:
-      branch: accessBranch
-      condition: $BUILD = "computeScoreModule"
-  - provider: lambda
-    skip_cleanup: true
-    function_name: "travisComputeWeek"
-    region: "us-east-1"
-    role: "arn:aws:iam::098833178654:role/service-role/travisComputeWeek-role-iyd0l8vp"
-    runtime: "python3.7"
-    handler_name: "lambda_handler"
-    module_name: "lambda_function"
-    on:
-      branch: accessBranch
-      condition: $BUILD = "computeWeekModule"
-  # - provider: lambda
-  #   skip_cleanup: true
-  #   function_name: "expectedPoints"
-  #   region: "us-east-1"
-  #   role: "arn:aws:iam::098833178654:role/ExpectedPointsRole"
-  #   runtime: "python3.7"
-  #   handler_name: "lambda_handler"
-  #   module_name: "computeScoreLambda"
-  #   on:
-  #     condition: $BUILD = "computeScoreModule" && $TRAVIS_BRANCH != travisSetup && $TRAVIS_BRANCH != master
-  # - provider: lambda
-  #   skip_cleanup: true
-  #   function_name: "computeScore"
-  #   region: "us-east-1"
-  #   role: "arn:aws:iam::098833178654:role/CalculateScoreRole"
-  #   runtime: "python3.7"
-  #   handler_name: "lambda_handler"
-  #   module_name: "computeScoreLambda"
-  #   on:
-  #     condition: $BUILD = "computeScoreModule" && $TRAVIS_BRANCH != travisSetup && $TRAVIS_BRANCH != master
+      all_branches: true
+after_deploy: echo https://s3.amazonaws.com/${WEB_BUCKET_NAME}/${FOLDER_NAME}/index.html
