@@ -42,12 +42,23 @@ function drawBasic(data) {
     table.addRows(probabilityData)
 
     var options = {
+        fontName: 'Lato',
+        fontSize: 12,
+
+       legend: 'none',
+
       hAxis: {
         title: 'Plays'
       },
       vAxis: {
         title: `Probability of ${awayTeamName} Win`
-      }
+      },
+       lineWidth: 3,
+
+           width: 950,
+        height: 500,
+        colors: ['#118AB2'],
+
     }
 
     chart.draw(table, options)
