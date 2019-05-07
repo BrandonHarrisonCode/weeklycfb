@@ -99,7 +99,7 @@ function onload_generate_list(response, data) {
         var li = null
 
         li = document.createElement('li')
-        li.onclick = function() { create_linechart(game.score, game.away) }
+        li.onclick = function() { create_linechart(game.score) }
 
         span = document.createElement('span')
         span.textContent = num++
