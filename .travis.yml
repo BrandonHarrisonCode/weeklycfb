@@ -3,13 +3,14 @@ python: "3.6"
 before_install:
   - pip install awscli
   - pip install aws-sam-cli
-script: bash deployCloudFormation.sh
+script: . deployCloudFormation.sh
 deploy:
-  provider: s3
-  bucket: "cfbgameoftheweek.com"
-  skip_cleanup: true
-  local-dir: frontEnd
-  upload-dir: ${TRAVIS_BRANCH}WebResources
-  acl: public_read
-  on:
-    branch: travisUpdate
+  - provider: s3
+    bucket: ${WEB_BUCKET_NAME}
+    skip_cleanup: true
+    local-dir: frontEnd
+    upload-dir: ${FOLDER_NAME}
+    acl: public_read
+    on:
+      all_branches: true
+after_deploy: echo https://s3.amazonaws.com/${WEB_BUCKET_NAME}/${FOLDER_NAME}/index.html
