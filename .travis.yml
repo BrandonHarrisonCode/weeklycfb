@@ -1,5 +1,5 @@
 before_install:
-  - pip install --user aws-sam-cli
+  - pip install aws-sam-cli
 script:
   - echo "SUCCESS"
   - echo This build was pushed from branch ${TRAVIS_BRANCH}.
