@@ -52,6 +52,9 @@ function drawBasic(data) {
         title: 'Plays'
       },
       vAxis: {
+        viewWindow: {
+          max: 1.0
+        },
         title: `Probability of ${awayTeamName} Win`
       },
       lineWidth: 3,
