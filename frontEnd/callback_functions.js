@@ -47,28 +47,36 @@ function drawBasic(response, data) {
     var intervals = Math.floor(probabilityData.length/50) + 1
     var horizontalTickList = new Array(intervals)
     for(var i = 0; i < intervals; i++) {
-      horizontalTickList[i] = { v: 50*i, f: 50*i }
+      horizontalTickList[i] = { v: 50*i}
     }
+    horizontalTickList[intervals] = {v: probabilityData[probabilityData.length-1][0]}
 
     var options = {
       fontName: 'Lato',
       fontSize: 12,
       title: `${awayTeamName} at ${homeTeamName}\nWeek ${splitDate[1]} of ${splitDate[0]}`,
+      titleTextStyle: { 
+        color: 'black',
+        fontName: 'Lato',
+        fontSize: 15,
+      },
       legend: 'none',
 
       hAxis: {
         ticks: horizontalTickList,
-        title: 'Plays'
+        title: 'Plays',
       },
       vAxis: {
         ticks: [0, 0.25, 0.50, 0.75, 1.0],
         viewWindow: {
           max: 1.0
         },
-        title: `Probability of ${awayTeamName} Win`
+        title: `Probability of ${awayTeamName} Win`,
+        format: '0.00',
+        allowContainerBoundaryTextCufoff: true
       },
       lineWidth: 3,
-      chartArea: {'left': '10%', 'bottom': '20%', 'top': '10%', 'width': '90%', 'height': '100%'},
+      chartArea: {'left': '10%', 'bottom': '20%', 'top': '10%', 'right': '5%', 'width': '90%', 'height': '100%'},
       width: "100%",
       height: "100%",
       colors: ['#118AB2'],
@@ -77,6 +85,19 @@ function drawBasic(response, data) {
         duration: 1000,
         easing: 'out'
       }
+      // trendlines: {
+      //   0: {
+      //     type: 'polynomial',
+      //     n: {
+      //       degree: -1
+      //     },
+      //     color: 'green',
+      //     lineWidth: 3,
+      //     opacity: 0.3,
+      //     showR2: true,
+      //     visibleInLegend: false
+      //   }
+      // }
     }
 
     chart.draw(table, options)
@@ -84,6 +105,7 @@ function drawBasic(response, data) {
     $(window).smartresize(function () {
       chart.draw(table, options);
     });
+    
   }
   else {
     display_element_missing_error(chartDivId)
