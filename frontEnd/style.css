@@ -4,19 +4,19 @@ body{
   font-weight: 300;
 }
 
-.container{
+.container {
   font-family: 'Lato', sans-serif;
   position:relative;
   padding:20px;
 }
 
-.left{
+.left {
   position: absolute;
   width:50%;
   left:0px;
 }
 
-.selectors{
+.selectors {
   margin: auto;
   width:50%;
   text-align: center;
@@ -27,7 +27,7 @@ body{
   font-weight: 300;
 }
 
-#submit_button{
+#submit_button {
   padding:12px 22px 12px 22px;
   margin-top:20px;
   font-family: 'Lato', sans-serif;
@@ -43,18 +43,18 @@ body{
   border-radius: 40px;
 }
 
-#submit_button:hover{
+#submit_button:hover {
   background-color: #118AB2;
   color:white;
 }
 
-.right{
+.right {
   position:absolute;
   width:50%;
   right:0px;
 }
 
-.right h1{
+.right h1 {
   text-align: center;
   font-weight: 900;
   font-size: 1.2em;
@@ -88,8 +88,9 @@ ol li {
   color:#118AB2;
 }
 
-li:hover{;
-  box-shadow: 0px 0px 5px lightgrey;}
+li:hover {
+  box-shadow: 0px 0px 5px lightgrey;
+}
  
 li p {
   padding-left: 60px;
