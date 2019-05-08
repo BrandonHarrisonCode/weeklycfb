@@ -172,7 +172,8 @@ function onload_generate_list(response, data) {
     else {
       var errorDiv = document.getElementById(errorBannerId)
       var errorMessage = document.createElement('p')
-      errorMessage.textContent = `We don't have data for that week.`
+      errorDiv.innerHTML = ''
+      errorMessage.textContent = 'There is no data for that week.'
       errorDiv.appendChild(errorMessage)            
     }
   } 
