@@ -6,6 +6,7 @@ const cannotFindErrorBannerError = 'The error banner could not be found. Please 
 const listDivId = 'list_div'
 const chartDivId = 'chart_div'
 const errorBannerId = 'error_banner'
+const gameListId = 'list_of_games'
 
 function select_correct_game(data) {
   var chartDiv = document.getElementById(chartDivId)
@@ -132,7 +133,7 @@ function onload_generate_list(response, data) {
 
     if(data != "") {
       var ol = document.createElement('ol')
-      var num = 1
+      var num = 0
       var top_score = Math.pow(factor, 1+15*data[0].score)
       var span = null
       var p = null
@@ -146,9 +147,14 @@ function onload_generate_list(response, data) {
 
         li = document.createElement('li')
         li.onclick = function() { create_linechart(game.score, game.away) }
+        li.setAttribute('page', Math.floor(num/7))
+
+        // Only things on the first page should be shown.
+        if(li.getAttribute('page') != '0')
+          li.style.display = 'none'
 
         span = document.createElement('span')
-        span.textContent = num++
+        span.textContent = ++num
 
         p = document.createElement('p')
 
@@ -162,12 +168,14 @@ function onload_generate_list(response, data) {
       })
 
       // Give ol some properties that we can refer back to for caching purposes.
-      ol.id = 'list_of_games'
+      ol.id = gameListId
+      ol.setAttribute('page', 0)
       ol.setAttribute('year', split_date[0])
       ol.setAttribute('week', split_date[1])
 
       listDiv.innerHTML = ''
       listDiv.appendChild(ol)
+      set_button_visibility(0, ol.childNodes.length)
     }
     else {
       var errorDiv = document.getElementById(errorBannerId)
@@ -180,4 +188,51 @@ function onload_generate_list(response, data) {
   else {
     display_element_missing_error(listDivId)
   }
+}
+
+function set_button_visibility(currentPage, numberOfGames) {
+  var nextButton = document.getElementById('next_button')
+  var backButton = document.getElementById('back_button')
+
+  if(currentPage <= 0)
+    backButton.style.visibility = 'hidden'
+  else
+    backButton.style.visibility = 'visible'
+
+  if(currentPage >= Math.ceil(numberOfGames/7) - 1)
+    nextButton.style.visibility = 'hidden'
+  else
+    nextButton.style.visibility = 'visible'
+}
+
+
+function change_page(numberToChange) {
+  var listOfGames = document.getElementById(gameListId)
+
+  if(listOfGames != null) {
+    var currentPageNumber = parseInt(listOfGames.getAttribute('page'), 10)
+    var newPageNumber = currentPageNumber + numberToChange
+    var numberOfGames = listOfGames.childNodes.length
+
+    listOfGames.setAttribute('page', newPageNumber)
+    listOfGames.querySelectorAll(`[page='${currentPageNumber}']`).forEach( game => {
+        game.style.display = 'none'
+    })
+    listOfGames.querySelectorAll(`[page='${newPageNumber}']`).forEach( game => {
+        game.style.display = 'list-item'
+    })
+    set_button_visibility(newPageNumber, numberOfGames)
+  }
+  else {
+    display_element_missing_error(gameListId)
+  }
+}
+
+
+function next_page() {
+  change_page(1)
+}
+
+function prev_page() {
+  change_page(-1)
 }

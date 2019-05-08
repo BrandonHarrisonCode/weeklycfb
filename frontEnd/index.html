@@ -21,7 +21,7 @@
         WEEK: <select id="week_dropdown"></select>
 
         <br><br>
-        <button id="submit_button" onclick="retrieve_data()">SMASH THAT LIKE BUTTON</button>
+        <button id="submit_button" onclick="retrieve_data()">Select Week</button>
         </div>
       <br><br>
       </div>
@@ -32,10 +32,12 @@
 
     <div class="right">
       <div id="list_div"></div>
+      <button id="back_button" onclick="prev_page()" style="visibility:hidden;">Back</button>
+      <button id="next_button" onclick="next_page()" style="visibility:hidden;">Next</button>
     </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src=smartresize.js></script>
-    <script type="text/javascript" src=callback_functions.js></script>
+    <script src=callback_functions.js></script>
     <script src=script.js></script>
   </body>
 </html>
