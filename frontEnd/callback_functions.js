@@ -42,10 +42,10 @@ function drawBasic(data) {
     table.addRows(probabilityData)
 
     var options = {
-        fontName: 'Lato',
-        fontSize: 12,
+      fontName: 'Lato',
+      fontSize: 12,
 
-       legend: 'none',
+      legend: 'none',
 
       hAxis: {
         title: 'Plays'
@@ -53,15 +53,19 @@ function drawBasic(data) {
       vAxis: {
         title: `Probability of ${awayTeamName} Win`
       },
-       lineWidth: 3,
-
-           width: 950,
-        height: 500,
-        colors: ['#118AB2'],
+      lineWidth: 3,
+      chartArea: {'left': '10%', 'width': '90%', 'height': '90%'},
+      width: "100%",
+      height: "100%",
+      colors: ['#118AB2'],
 
     }
 
     chart.draw(table, options)
+    // And then:
+    $(window).smartresize(function () {
+      chart.draw(table, options);
+    });
   }
   else {
     display_element_missing_error(chartDivId)
