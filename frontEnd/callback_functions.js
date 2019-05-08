@@ -52,6 +52,7 @@ function drawBasic(data) {
         title: 'Plays'
       },
       vAxis: {
+        ticks: [0, 0.25, 0.50, 0.75, 1.0],
         viewWindow: {
           max: 1.0
         },
