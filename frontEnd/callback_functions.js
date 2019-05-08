@@ -42,6 +42,12 @@ function drawBasic(data) {
     table.addColumn('number', `Probability of ${awayTeamName} Win`)
     table.addRows(probabilityData)
 
+    var intervals = Math.floor(probabilityData.length/50) + 1
+    var horizontalTickList = new Array(intervals)
+    for(var i = 0; i < intervals; i++) {
+      horizontalTickList[i] = { v: 50*i, f: 50*i }
+    }
+
     var options = {
       fontName: 'Lato',
       fontSize: 12,
@@ -49,6 +55,7 @@ function drawBasic(data) {
       legend: 'none',
 
       hAxis: {
+        ticks: horizontalTickList,
         title: 'Plays'
       },
       vAxis: {
@@ -59,7 +66,7 @@ function drawBasic(data) {
         title: `Probability of ${awayTeamName} Win`
       },
       lineWidth: 3,
-      chartArea: {'left': '10%', 'width': '90%', 'height': '90%'},
+      chartArea: {'left': '10%', 'bottom': "20%", 'width': '90%', 'height': '90%'},
       width: "100%",
       height: "100%",
       colors: ['#118AB2'],
