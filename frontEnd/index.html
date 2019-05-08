@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
@@ -11,30 +12,36 @@
   </head>
 
   <body>
-    <div class="left">
+  <div class="table">
+    <div class="row">
 
-      <div id="error_banner"></div>
+      <div class="left">
+        <div class="left_table">
+          <div id="error_banner"></div>
 
-      <div class="selectors">
-        <div id="selection_div">
-        YEAR: <select id="year_dropdown"></select> <br><br>
-        WEEK: <select id="week_dropdown"></select>
+          <div class="selectors">
+            <div id="selection_div">
+            YEAR: <select id="year_dropdown"></select> <br><br>
+            WEEK: <select id="week_dropdown"></select>
 
-        <br><br>
-        <button id="submit_button" onclick="retrieve_data()">Select Week</button>
+            <br><br>
+            <button id="submit_button" onclick="retrieve_data()">Select Week</button>
+            </div>
+          <br><br>
+          </div>
+
+          <div id="chart_div"></div>
         </div>
-      <br><br>
       </div>
 
-      <div id="chart_div"></div>
+      <div class="right">
+        <div id="list_div"></div>
+        <button id="back_button" onclick="prev_page()" style="visibility:hidden;">Back</button>
+        <button id="next_button" onclick="next_page()" style="visibility:hidden;">Next</button>
+      </div>
 
     </div>
-
-    <div class="right">
-      <div id="list_div"></div>
-      <button id="back_button" onclick="prev_page()" style="visibility:hidden;">Back</button>
-      <button id="next_button" onclick="next_page()" style="visibility:hidden;">Next</button>
-    </div>
+  </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src=smartresize.js></script>
     <script src=callback_functions.js></script>

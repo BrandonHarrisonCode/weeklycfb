@@ -21,13 +21,15 @@ function select_correct_game(data) {
   return null
 }
 
-function drawBasic(data) {
+function drawBasic(response, data) {
   var game = select_correct_game(data)
   var table = new google.visualization.DataTable()
   var chart = new google.visualization.LineChart(document.getElementById(chartDivId))
 
   if(game != null && table != null && chart != null) {
     var awayTeamName = game['away']
+    var homeTeamName = game['home']
+    var splitDate = response.yearweek.split(':')
     var playByPlayData = game['play-by-play']
 
     // Create an array of arrays of the form [playNumber, winProbabilityForAwayTeam]
@@ -51,7 +53,7 @@ function drawBasic(data) {
     var options = {
       fontName: 'Lato',
       fontSize: 12,
-
+      title: `${awayTeamName} at ${homeTeamName}\nWeek ${splitDate[1]} of ${splitDate[0]}`,
       legend: 'none',
 
       hAxis: {
@@ -66,11 +68,15 @@ function drawBasic(data) {
         title: `Probability of ${awayTeamName} Win`
       },
       lineWidth: 3,
-      chartArea: {'left': '10%', 'bottom': "20%", 'width': '90%', 'height': '90%'},
+      chartArea: {'left': '10%', 'bottom': '20%', 'top': '10%', 'width': '90%', 'height': '100%'},
       width: "100%",
       height: "100%",
       colors: ['#118AB2'],
-
+      animation: {
+        startup: true,
+        duration: 1000,
+        easing: 'out'
+      }
     }
 
     chart.draw(table, options)
@@ -120,7 +126,6 @@ function onload_wrapper(f, request, response) {
   if (request.status >= 200 && request.status < 400) {
     var response = JSON.parse(response)
     var data = response.data
-    var yearweek = response.yearweek
     f(response, data)  
   }
   else {
@@ -130,7 +135,7 @@ function onload_wrapper(f, request, response) {
 
 function onload_generate_graph(response, data) {
   google.charts.load('current', {packages: ['corechart', 'line']})
-  google.charts.setOnLoadCallback(function() { drawBasic(data) })
+  google.charts.setOnLoadCallback(function() { drawBasic(response, data) })
 }
 
 function calculate_new_score(top_score, score) {
@@ -171,7 +176,7 @@ function onload_generate_list(response, data) {
 
         score = calculate_new_score(top_score, game.score)
 
-        p.textContent = `${game.away} vs. ${game.home} : ${score}`
+        p.textContent = `${game.away} vs. ${game.home} : ${Math.round(score)}`
 
         li.appendChild(span)
         li.appendChild(p)
@@ -185,6 +190,9 @@ function onload_generate_list(response, data) {
       ol.setAttribute('week', split_date[1])
 
       listDiv.innerHTML = ''
+      var listTitle = document.createElement('h1')
+      listTitle.innerHTML = `Game Ranking for Week ${split_date[1]} of ${split_date[0]}`
+      listDiv.appendChild(listTitle)
       listDiv.appendChild(ol)
       set_button_visibility(0, ol.childNodes.length)
     }

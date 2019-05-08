@@ -10,17 +10,36 @@ body{
   padding:20px;
 }
 
+.table {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+.row {
+  display: table-row;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
 .left {
-  position: absolute;
+  display: table-cell;
   width:50%;
   left:0px;
 }
 
+.left_table {
+  display: table;
+  table-layout: fixed; 
+  height: 100%;
+  width: 100%;
+}
+
 .selectors {
-  margin: auto;
+  display: table-row;
   width:50%;
   text-align: center;
-  padding-top:60px;
   padding-bottom: 0px;
   padding-left:100px;
   margin-bottom: -20px;
@@ -34,8 +53,6 @@ body{
   font-size: 20px;
   font-weight: 300;
   color:#118AB2;
-  -webkit-appearance: none; 
-  -moz-appearance: none;
   cursor: pointer; 
   box-shadow: 0px 0px 2px #118AB2;
   border-width: 1px;
@@ -49,7 +66,7 @@ body{
 }
 
 .right {
-  position:absolute;
+  display: table-cell;
   width:50%;
   right:0px;
 }
@@ -76,7 +93,7 @@ ol li {
   padding: 10px;
   padding-left: 20px;
   margin: auto;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width:80%;
   border-width: 1px;
   border-color: #118AB2;
@@ -84,7 +101,7 @@ ol li {
   box-shadow: 0px 0px 1px lightgrey;
   cursor: pointer; 
   font-size:20px;
-  line-height: 38px;
+  line-height: 36px;
   color:#118AB2;
 }
 
@@ -105,8 +122,6 @@ span {
 
 select {
   position:relative;
-  -webkit-appearance: none; 
-  -moz-appearance: none;
   appearance: none;       /* remove default arrow */
   padding:10px;
   margin-left:10px;
@@ -118,5 +133,6 @@ select {
 }
 
 #chart_div {
-    margin-left:20px;
+    display: table-row;
+    height: 60%;
 }
