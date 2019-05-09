@@ -5,7 +5,7 @@ set -e
 # This sets up environment variables for the rest of the build/deploy cycle.
 # If master is being pushed, then everything needs to be set to production.
 # Otherwise, the deployment stage is development and the stack and folder have the branch name prepended.
-if [ $TRAVIS_BRANCH -eq "master" ]
+if [ $TRAVIS_BRANCH == "master" ]
 then
   STACK_NAME="ProductionStack"
   DEPLOYMENT_STAGE="Production"
