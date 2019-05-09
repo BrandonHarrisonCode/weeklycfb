@@ -105,7 +105,7 @@ function drawBasic(response, data) {
     $(window).smartresize(function () {
       chart.draw(table, options);
     });
-    
+
   }
   else {
     display_element_missing_error(chartDivId)
@@ -198,7 +198,7 @@ function onload_generate_list(response, data) {
 
         score = calculate_new_score(top_score, game.score)
 
-        p.textContent = `${game.away} vs. ${game.home} : ${Math.round(score)}`
+        p.innerHTML = `<strong>${game.away} @ ${game.home}</strong> &emsp; Our Score: ${Math.round(score)}`
 
         li.appendChild(span)
         li.appendChild(p)
@@ -214,6 +214,8 @@ function onload_generate_list(response, data) {
       listDiv.innerHTML = ''
       var listTitle = document.createElement('h1')
       listTitle.innerHTML = `Game Ranking for Week ${split_date[1]} of ${split_date[0]}`
+      listTitle.id = 'list_title'
+
       listDiv.appendChild(listTitle)
       listDiv.appendChild(ol)
       set_button_visibility(0, ol.childNodes.length)
