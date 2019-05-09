@@ -112,6 +112,8 @@ li:hover {
 li p {
   padding-left: 60px;
   color: #555;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
   font-size:15px;
   line-height: 10px;
 }
@@ -135,4 +137,35 @@ select {
 #chart_div {
     display: table-row;
     height: 60%;
+}
+
+#list_button_div {
+  text-align: center;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#list_button_div button {
+  padding:8px 16px 8px 16px;
+  margin-top:0px;
+  font-family: 'Lato', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color:#118AB2;
+  cursor: pointer; 
+  box-shadow: 0px 0px 2px #118AB2;
+  border-width: 1px;
+  border-color: #118AB2;
+  border-radius: 20px;
+}
+
+#list_button_div button:hover {
+  background-color: #118AB2;
+  color:white;
+}
+
+#list_title {
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
 }
