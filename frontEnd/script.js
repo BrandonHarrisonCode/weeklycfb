@@ -1,25 +1,10 @@
-const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda'
+const lambdaURL = 'https://6c1yu4c5lj.execute-api.us-east-1.amazonaws.com/Prod/'
+// const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda'
 const app = document.getElementById('list_div')
 
 //Create dropdown menus
 const year_dropdown = document.getElementById('year_dropdown')
 const week_dropdown = document.getElementById('week_dropdown')
-
-// TODO make these build via function calls for easy change to dynamic build later
-var year_list = ["2017", "2018"]
-var option_text
-for(option_text in year_list) {
-  var option = document.createElement("option")
-  option.text = year_list[option_text]
-  year_dropdown.add(option)
-}
-
-for(var i = 1; i < 17; i++) {
-  var option = document.createElement("option")
-  option.text = i
-  week_dropdown.add(option)
-}
-
 
 function create_linechart(score, awayTeamName) {
   var listOfGames = document.getElementById('list_of_games')
@@ -40,11 +25,18 @@ function create_linechart(score, awayTeamName) {
   }
 }
 
-function retrieve_data() {
+function retrieve_availible_weeks() {
+    var request = new XMLHttpRequest();
+    request.open('GET', lambdaURL + 'availibleWeeks', true)
+    request.onload = function() { onload_wrapper(onload_populate_dropdowns, request, this.response)}
+    request.send()
+}
+
+function retrieve_weeks_data() {
   var request = new XMLHttpRequest()
-  request.open('GET', lambdaURL + '?year=' + year_dropdown.value + '&week=' + week_dropdown.value, true)
+  request.open('GET', lambdaURL + 'entertainmentScores?year=' + year_dropdown.value + '&week=' + week_dropdown.value, true)
   request.onload = function() { onload_wrapper(onload_generate_list, request, this.response)}
   request.send()
 }
 
-retrieve_data()
+retrieve_availible_weeks()

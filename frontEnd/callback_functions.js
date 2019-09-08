@@ -8,6 +8,8 @@ const chartDivId = 'chart_div'
 const errorBannerId = 'error_banner'
 const gameListId = 'list_of_games'
 
+var yearweeks = null;
+
 function select_correct_game(data) {
   var chartDiv = document.getElementById(chartDivId)
   if(data == null || chartDiv == null)
@@ -162,6 +164,35 @@ function onload_generate_graph(response, data) {
 
 function calculate_new_score(top_score, score) {
   return 100*Math.pow(factor, 1+15*score)/top_score
+}
+
+function onload_populate_dropdowns(response, data) {
+    yearweeks = data;
+
+    populate_dropdowns();
+}
+
+function populate_dropdowns() {
+    var yearDropdown = document.getElementById('year_dropdown');
+    var weekDropdown = document.getElementById('week_dropdown');
+    weekDropdown.innerHTML = '';
+
+    if(yearDropdown.options.length == 0) {
+        var option_text
+        for(option_text in yearweeks) {
+            var option = document.createElement("option")
+            option.text = option_text
+            year_dropdown.add(option);
+        }
+    }
+
+    yearweeks[year_dropdown.value].forEach(function(value) {
+        var option = document.createElement("option")
+        option.text = value
+        week_dropdown.add(option)
+    });
+    
+    retrieve_weeks_data();
 }
 
 function onload_generate_list(response, data) {

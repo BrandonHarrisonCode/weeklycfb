@@ -21,11 +21,11 @@
 
           <div class="selectors">
             <div id="selection_div">
-            YEAR: <select id="year_dropdown"></select> <br><br>
-            WEEK: <select id="week_dropdown"></select>
+            YEAR: <select id="year_dropdown" onchange="populate_dropdowns()"></select> <br><br>
+            WEEK: <select id="week_dropdown" onchange="retrieve_weeks_data()"></select>
 
             <br><br>
-            <button id="submit_button" onclick="retrieve_data()">Select Week</button>
+            <!--<button id="submit_button" onclick="retrieve_weeks_data()">Select Week</button>-->
             </div>
           <br><br>
           </div>
