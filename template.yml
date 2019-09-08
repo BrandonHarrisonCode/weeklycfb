@@ -69,6 +69,26 @@ Resources:
             TableName: !Ref CalculatedScoresTable
       Timeout: 300
 
+  AvailibleWeeksLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: availibleWeeksModule/
+      Description: Returns a list of years and weeks that the database currently holds.
+      Environment:
+        Variables:
+          CalculatedScoresTableName: !Ref CalculatedScoresTable
+      Events:
+        GetEntertainmentScore:
+          Type: Api
+          Properties:
+            Path: /availibleWeeks
+            Method: GET
+      FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AvailibleWeeksLambda' ] ]
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref CalculatedScoresTable
+      Timeout: 3
+
   AccessLambda:
     Type: AWS::Serverless::Function
     Properties:
