@@ -50,7 +50,7 @@ Resources:
       Description: Computes an entertainment score for each game and places into a DynamoDB table.
       Environment:
         Variables:
-          CalculatedScoresTableName: CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScores
       Events:
         NewGameEvent:
           Type: SQS
@@ -69,7 +69,7 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: 4thDowns
         - DynamoDBCrudPolicy:
-            TableName: CalculatedScoresTable
+            TableName: CalculatedScores
       Timeout: 300
 
   AvailibleWeeksLambda:
@@ -79,7 +79,7 @@ Resources:
       Description: Returns a list of years and weeks that the database currently holds.
       Environment:
         Variables:
-          CalculatedScoresTableName: CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScores
       Events:
         GetEntertainmentScore:
           Type: Api
@@ -89,7 +89,7 @@ Resources:
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AvailibleWeeksLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
-            TableName: CalculatedScoresTable
+            TableName: CalculatedScores
       Timeout: 3
 
   AccessLambda:
@@ -99,7 +99,7 @@ Resources:
       Description: Gets and returns a week of entertainment scores and games for a season.
       Environment:
         Variables:
-          CalculatedScoresTableName: CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScores
       Events:
         GetEntertainmentScore:
           Type: Api
@@ -109,7 +109,7 @@ Resources:
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AccessLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
-            TableName: CalculatedScoresTable
+            TableName: CalculatedScores
       Timeout: 3
 
   DeadGamesQueue:
