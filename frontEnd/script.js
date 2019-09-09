@@ -1,5 +1,4 @@
-const lambdaURL = 'https://6c1yu4c5lj.execute-api.us-east-1.amazonaws.com/Prod/'
-// const lambdaURL = 'https://fchv75rdm1.execute-api.us-east-1.amazonaws.com/default/travisAccessLambda'
+const lambdaURL = 'https://l0rgwfdo09.execute-api.us-east-1.amazonaws.com/Prod/'
 const app = document.getElementById('list_div')
 
 //Create dropdown menus

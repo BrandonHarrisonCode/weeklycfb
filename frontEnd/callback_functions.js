@@ -9,34 +9,28 @@ const errorBannerId = 'error_banner'
 const gameListId = 'list_of_games'
 
 var yearweeks = null;
+var winProbabilityData = {}
 
-function select_correct_game(data) {
-  var chartDiv = document.getElementById(chartDivId)
-  if(data == null || chartDiv == null)
-    return null
-  else {
-    for(var i = 0; i < data.length; i++) {
-      if(data[i].away === chartDiv.getAttribute('away'))
-        return data[i]
-    }
-  }
-  return null
+function generate_graph(game) {
+    winProbabilityData = game;
+    google.charts.load('current', {packages: ['corechart', 'line']})
+    google.setOnLoadCallback(draw_win_probability_graph);
 }
 
-function drawBasic(response, data) {
-  var game = select_correct_game(data)
+function draw_win_probability_graph() {
+  var awayTeamName = winProbabilityData.awayTeamName;
+  var homeTeamName = winProbabilityData.homeTeamName;
+  var playByPlay = winProbabilityData.playByPlay;
+
   var table = new google.visualization.DataTable()
   var chart = new google.visualization.LineChart(document.getElementById(chartDivId))
 
-  if(game != null && table != null && chart != null) {
-    var awayTeamName = game['away']
-    var homeTeamName = game['home']
-    var splitDate = response.yearweek.split(':')
-    var playByPlayData = game['play-by-play']
+  if(winProbabilityData != null && table != null && chart != null) {
+    var splitDate = winProbabilityData.splitdate;
 
     // Create an array of arrays of the form [playNumber, winProbabilityForAwayTeam]
     // Note that the 0th play is dropped because all teams start with a 50/50 chance of winning.
-    var probabilityData = playByPlayData.map(function(winProbabilityForAwayTeam, playNumber) {
+    var probabilityData = playByPlay.map(function(winProbabilityForAwayTeam, playNumber) {
       if(playNumber == 0)
         return null
       return [playNumber, winProbabilityForAwayTeam]
@@ -157,11 +151,6 @@ function onload_wrapper(f, request, response) {
   }
 }
 
-function onload_generate_graph(response, data) {
-  google.charts.load('current', {packages: ['corechart', 'line']})
-  google.charts.setOnLoadCallback(function() { drawBasic(response, data) })
-}
-
 function calculate_new_score(top_score, score) {
   return 100*Math.pow(factor, 1+15*score)/top_score
 }
@@ -216,7 +205,9 @@ function onload_generate_list(response, data) {
 
         li = document.createElement('li')
         li.onclick = function() { create_linechart(game.score, game.away) }
+        li.onclick = function() { generate_graph({'splitdate': split_date, 'homeTeamName': game.home, 'awayTeamName': game.away, 'playByPlay': game['play-by-play']})}
         li.setAttribute('page', Math.floor(num/7))
+        li.setAttribute('play-by-play', game['play-by-play']);
 
         // Only things on the first page should be shown.
         if(li.getAttribute('page') != '0')
