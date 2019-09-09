@@ -6,6 +6,7 @@ import boto3
 sqs = boto3.client('sqs')
 queue_url = os.environ['QueueUrl']
 
+
 def lambda_handler(event, context):
     year = int(event['year'])
     week = int(event['week'])
@@ -59,9 +60,10 @@ def get_games(url):
 
 def push_messages(year, week, games):
     for game in games:
+        print('Pushing year {} week {} to queue with data: {}'.format(year, week, game))
         response = sqs.send_message(
-            QueueUrl = queue_url,
-            MessageBody = json.dumps(game),
+            QueueUrl=queue_url,
+            MessageBody=json.dumps(game),
         )
         if not response:
             raise IOError('Could not create a message for {}'.format(game))
