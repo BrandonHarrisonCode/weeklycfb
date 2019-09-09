@@ -22,11 +22,22 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
-def retrieve_play_by_play(yearweek, score):
+def abort(message, code):
+    return {
+            'isBase64Encoded': False,
+            'statusCode': code,
+            'headers': {
+                    "Access-Control-Allow-Origin": "*"
+            },
+            'body': json.dumps(message, cls=DecimalEncoder)
+    }
+
+
+def retrieve_game(yearweek):
     response = table.query(
                     ExpressionAttributeNames={"#pbp": "play-by-play"},
-                    KeyConditionExpression=Key('year:week').eq(yearweek) & Key('score').eq(decimal.Decimal(score)),
-                    ProjectionExpression="#pbp,home,away",
+                    KeyConditionExpression=Key('year:week').eq(yearweek),
+                    ProjectionExpression="score,home,away,#pbp",
                     ScanIndexForward=False,
                     Select="SPECIFIC_ATTRIBUTES"
     )
@@ -53,36 +64,6 @@ def lambda_handler(event, context):
     # This call should be coming from an AWS API-Gateway. Might want to find some way to check for this and fail otherwise.
     if not 'queryStringParameters' in event or not all(key in event['queryStringParameters'] for key in ('year', 'week')):
         abort("Bad Request", 400)
+
     yearweek = event['queryStringParameters']['year'] + ":" + event['queryStringParameters']['week']
-    if 'score' in event['queryStringParameters']:
-        return retrieve_play_by_play(yearweek, event['queryStringParameters']['score'])
-    response = table.query(
-                    KeyConditionExpression=Key('year:week').eq(yearweek),
-                    ProjectionExpression="score,home,away",
-                    ScanIndexForward=False,
-                    Select="SPECIFIC_ATTRIBUTES"
-    )
-    built_response = {
-            'yearweek': yearweek,
-            'data': response['Items']
-    }
-
-    return {
-            'isBase64Encoded': False,
-            'statusCode': 200,
-            'headers': {
-                    "Access-Control-Allow-Origin": "*"
-            },
-            'body': json.dumps(built_response, cls=DecimalEncoder)
-    }
-
-
-def abort(message, code):
-    return {
-            'isBase64Encoded': False,
-            'statusCode': code,
-            'headers': {
-                    "Access-Control-Allow-Origin": "*"
-            },
-            'body': json.dumps(message, cls=DecimalEncoder)
-    }
+    return retrieve_game(yearweek)
