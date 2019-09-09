@@ -47,7 +47,7 @@ Resources:
       Description: Computes an entertainment score for each game and places into a DynamoDB table.
       Environment:
         Variables:
-          CalculatedScoresTableName: !Ref CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScoresTable
       Events:
         NewGameEvent:
           Type: SQS
@@ -66,7 +66,7 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: 4thDowns
         - DynamoDBCrudPolicy:
-            TableName: !Ref CalculatedScoresTable
+            TableName: CalculatedScoresTable
       Timeout: 300
 
   AvailibleWeeksLambda:
@@ -76,7 +76,7 @@ Resources:
       Description: Returns a list of years and weeks that the database currently holds.
       Environment:
         Variables:
-          CalculatedScoresTableName: !Ref CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScoresTable
       Events:
         GetEntertainmentScore:
           Type: Api
@@ -86,7 +86,7 @@ Resources:
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AvailibleWeeksLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref CalculatedScoresTable
+            TableName: CalculatedScoresTable
       Timeout: 3
 
   AccessLambda:
@@ -96,7 +96,7 @@ Resources:
       Description: Gets and returns a week of entertainment scores and games for a season.
       Environment:
         Variables:
-          CalculatedScoresTableName: !Ref CalculatedScoresTable
+          CalculatedScoresTableName: CalculatedScoresTable
       Events:
         GetEntertainmentScore:
           Type: Api
@@ -106,7 +106,7 @@ Resources:
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AccessLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref CalculatedScoresTable
+            TableName: CalculatedScoresTable
       Timeout: 3
 
   DeadGamesQueue:
@@ -126,33 +126,6 @@ Resources:
           Key: Stage
           Value: !Ref DeploymentStage
       VisibilityTimeout: 900
-
-  CalculatedScoresTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-        -
-          AttributeName: "year:week"
-          AttributeType: "S"
-        -
-          AttributeName: "score"
-          AttributeType: "N"
-      BillingMode: PROVISIONED
-      KeySchema:
-        -
-          AttributeName: "year:week"
-          KeyType: HASH
-        -
-          AttributeName: "score"
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 3
-      TableName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'CalculatedScores' ] ]
-      Tags:
-        -
-          Key: Stage
-          Value: !Ref DeploymentStage
 
 Outputs:
   ApiURL:
