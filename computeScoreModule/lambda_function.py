@@ -16,8 +16,9 @@ def lambda_handler(event, context):
     if len(records) > 1:
         return abort(400)
     for record in event['Records']:
-       game = json.loads(str(record["body"]))
+        game = json.loads(str(record["body"]))
 
+    print(game)
     score = get_and_save_score(game)
     print(score)
 

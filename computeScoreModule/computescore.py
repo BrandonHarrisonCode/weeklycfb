@@ -4,11 +4,12 @@ import urllib
 from winprobability import play_win_probability, pregame_win_probability, postgame_win_probability, moving_average
 from operator import itemgetter
 
+
 def compute_score(game):
     url = create_plays_url(game)
     print('URL for play data: {}'.format(url))
     home_team = game['home_team']
-    vegas_line = 0
+    vegas_line = get_vegas_line(game)
 
     plays = get_plays(url)
     win_probabilites = compute_win_probabilities(plays, home_team, vegas_line)
@@ -35,6 +36,38 @@ def get_plays(url):
     if len(plays) == 0:
         raise ValueError('No plays found at {}'.format(url))
     return sorted(plays, key=itemgetter('id'))
+
+
+def create_vegas_line_url(game):
+    base = 'https://api.collegefootballdata.com/lines?seasonType=both&year={}&week={}&home={}&away={}'
+    url = base.format(game['season'], game['week'], game['home_team'], game['away_team'])
+    return url
+
+
+def get_vegas_line(game):
+    url = create_vegas_line_url(game)
+    print('URL for line data: {}'.format(url))
+
+    result = requests.get(url)
+    if not result.ok:
+        print('Could not load betting lines')
+        return 0
+    content = json.loads(result.content)[0]
+    lines = content.get('lines')
+    if lines is None or len(lines) == 0:
+        print('No betting lines stored for play')
+        return 0
+
+    vegas_line_avg = 0
+    for line in lines:
+        if line['provider'] == 'consensus':
+            print('Vegas line: {}'.format(line['spread']))
+            return line['spread']
+        else:
+            vegas_line_avg += line['spread']
+    vegas_line = vegas_line_avg / len(lines)
+    print('Vegas line: {}'.format(vegas_line))
+    return vegas_line
 
 
 def compute_win_probabilities(plays, home_team, vegas_line):
