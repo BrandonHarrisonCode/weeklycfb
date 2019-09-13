@@ -21,9 +21,7 @@ Globals:
       Stage: !Ref DeploymentStage
   Api:
     EndpointConfiguration: REGIONAL
-    Cors:
-        AllowMethods: "'GET'"
-        AllowOrigin: "'*'"
+    Cors: "'*'"
 
 Resources:
   ComputeWeekLambda:
