@@ -9,6 +9,7 @@ deploy:
     bucket: ${WEB_BUCKET_NAME}
     skip_cleanup: true
     local-dir: frontEnd
+    acl: public
     on:
         branch: master
 after_deploy: echo https://s3.amazonaws.com/${WEB_BUCKET_NAME}/index.html
