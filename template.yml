@@ -20,8 +20,8 @@ Globals:
     Tags:
       Stage: !Ref DeploymentStage
   Api:
-    EndpointConfiguration: REGIONAL
-    Cors: "'*'"
+    EndpointConfiguration: EDGE
+    Cors: "'cfbgameoftheweek.com'"
 
 Resources:
   ComputeWeekLambda:
@@ -79,11 +79,12 @@ Resources:
         Variables:
           CalculatedScoresTableName: CalculatedScores
       Events:
-        GetEntertainmentScore:
+        GetAvailibleWeeks:
           Type: Api
           Properties:
             Path: /availibleWeeks
             Method: GET
+            RestApiId: oqt9invuzd
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AvailibleWeeksLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
@@ -104,6 +105,7 @@ Resources:
           Properties:
             Path: /entertainmentScores
             Method: GET
+            RestApiId: oqt9invuzd
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AccessLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
@@ -128,7 +130,3 @@ Resources:
           Value: !Ref DeploymentStage
       VisibilityTimeout: 900
 
-Outputs:
-  ApiURL:
-    Description: "API endpoint URL"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
