@@ -21,3 +21,6 @@ if [ $TRAVIS_BRANCH == "master" ]
 then
     sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE}
 fi
+
+cd frontend
+yarn build
