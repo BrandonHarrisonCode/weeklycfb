@@ -29,8 +29,6 @@ Resources:
         CertificateArn: arn:aws:acm:us-east-1:098833178654:certificate/68cc6d43-7770-44cb-8888-300c5a4e1fba
         DomainName: api.cfbgameoftheweek.com
         EndpointConfiguration: EDGE
-        Route53:
-          HostedZoneId: Z2FDTNDATAQYW2
       EndpointConfiguration: EDGE
       Name: "Public API"
       StageName: !Ref DeploymentStage
