@@ -15,7 +15,7 @@ sam --version
 
 # Follow the CloudFormation deploy steps using aws-sam-cli and aws-cli
 sam validate
-sam build --use-container
+sam build
 sam package --output-template-file packaged.yml --s3-bucket cfb-game-of-the-week-zip-files
 if [ $TRAVIS_BRANCH == "master" ]
 then
