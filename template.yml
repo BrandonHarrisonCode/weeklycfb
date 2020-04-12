@@ -19,11 +19,22 @@ Globals:
     Runtime: python3.7
     Tags:
       Stage: !Ref DeploymentStage
-  Api:
-    EndpointConfiguration: EDGE
-    Cors: "'cfbgameoftheweek.com'"
 
 Resources:
+  PublicApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Cors: "'cfbgameoftheweek.com'"
+      Domain: 
+        CertificateArn: arn:aws:acm:us-east-1:098833178654:certificate/68cc6d43-7770-44cb-8888-300c5a4e1fba
+        DomainName: api.cfbgameoftheweek.com
+        EndpointConfiguration: EDGE
+        Route53:
+          HostedZoneId: Z2FDTNDATAQYW2
+      EndpointConfiguration: EDGE
+      Name: "Public API"
+      StageName: !Ref DeploymentStage
+
   ComputeWeekLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -84,7 +95,7 @@ Resources:
           Properties:
             Path: /availibleWeeks
             Method: GET
-            RestApiId: oqt9invuzd
+            RestApiId: !Ref PublicApi
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AvailibleWeeksLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
@@ -105,7 +116,7 @@ Resources:
           Properties:
             Path: /entertainmentScores
             Method: GET
-            RestApiId: oqt9invuzd
+            RestApiId: !Ref PublicApi
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'AccessLambda' ] ]
       Policies:
         - DynamoDBReadPolicy:
