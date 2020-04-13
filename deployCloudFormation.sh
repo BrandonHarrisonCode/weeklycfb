@@ -8,6 +8,8 @@ set -e
 STACK_NAME="ProductionStack"
 DEPLOYMENT_STAGE="Production"
 FOLDER_NAME="ProductionWebResources"
+CLOUDFRONT_DISTRIBUTION_ID="E1BEVY7FP1UR6X"
+S3_BUCKET="s3://cfbgameoftheweek.com"
 
 # Check the aws-cli and aws-sam-cli versions in case something breaks
 aws --version
@@ -17,13 +19,13 @@ sam --version
 sam validate
 sam build
 sam package --output-template-file packaged.yml --s3-bucket cfb-game-of-the-week-zip-files
-if [ $TRAVIS_BRANCH == "master" ]
+if [[ "${TRAVIS_BRANCH}" == "master" ]]
 then
-    sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE}
+  sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE} --force-upload
 fi
 
 cd frontend
 yarn install
 yarn build
-aws sync build s3://cfbgameoftheweek.com
-aws cloudfront create-invalidation --distribution-id E1BEVY7FP1UR6X --paths "/*"
+aws s3 sync build "${S3_BUCKET}"
+aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
