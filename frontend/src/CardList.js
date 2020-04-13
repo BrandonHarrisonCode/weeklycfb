@@ -22,7 +22,7 @@ export default class CardList extends React.Component {
       loading: true
     });
  
-    const url = 'https://feqt8qhih9.execute-api.us-east-1.amazonaws.com/Production/entertainmentScores?week=1&year=2019'
+    const url = 'https://api.cfbgameoftheweek.com/entertainmentScores?week=1&year=2019'
     const response = await fetch(url);
     const parsedJSON = await response.json();
 
