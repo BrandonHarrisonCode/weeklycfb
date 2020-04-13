@@ -23,4 +23,7 @@ then
 fi
 
 cd frontend
+yarn install
 yarn build
+aws sync build s3://cfbgameoftheweek.com
+aws cloudfront create-invalidation --distribution-id E1BEVY7FP1UR6X --paths "/*"
