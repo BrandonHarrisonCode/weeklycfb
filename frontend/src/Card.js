@@ -9,7 +9,7 @@ import './Card.css'
 
 export default function SimpleCard(props) {
   return (
-    <Card>
+    <Card elevation={2} className="card">
       <CardContent>
         <Typography color="textSecondary" gutterBottom>
           {props.rank}.

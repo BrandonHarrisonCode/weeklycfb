@@ -1,5 +1,11 @@
 import React from 'react';
-import Card from './Card'
+import 'typeface-roboto';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import './CardList.css';
+import Card from './Card';
 
 export default class CardList extends React.Component {
   constructor(props) {
@@ -32,18 +38,21 @@ export default class CardList extends React.Component {
   render() {
     const {loading, gamesData} = this.state;
     return (
-      <div>
-        {
-          loading ? "loading..." : 
-              gamesData.map((game, rank) => {
+      <Paper elevation={3} className="cardList">
+        <Typography variant="h3" gutterBottom> CFB Game of the Week </Typography>
+        <List>
+          {
+            loading ? "loading..." : 
+              gamesData.slice(0,10).map((game, rank) => {
                 const {home, away} = game;
                 return (
-                  <li key={rank}>
+                  <ListItem>
                     <Card rank={rank+1} home={home} away={away}/>
-                  </li>
+                  </ListItem>
                 )})
-        }
-      </div>
+          }
+        </List>
+      </Paper>
       //<Card rank="1" home="Utah State" away="Wake Forest"/>
     );
   }

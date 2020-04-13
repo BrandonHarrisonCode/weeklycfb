@@ -1,0 +1,10 @@
+.cardList {
+  width: 100%;
+  max-width: 40em;
+  margin: 0 auto;
+  margin-top: 2em;
+}
+
+.card {
+  width: 100%;
+}
