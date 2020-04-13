@@ -4,7 +4,7 @@ import Card from './Card';
 
 function App() {
     return (
-            <Card />
+            <Card rank="1" home="Utah State" away="Wake Forest"/>
   );
 }
 

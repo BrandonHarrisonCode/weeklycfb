@@ -4,35 +4,22 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import './Card.css'
 
-export default function SimpleCard() {
-  const bull = <span>•</span>;
-
+export default function SimpleCard(props) {
   return (
     <Card>
       <CardContent>
         <Typography color="textSecondary" gutterBottom>
-          Word of the Day
+          {props.rank}.
         </Typography>
         <Typography variant="h5" component="h2">
-          be
-          {bull}
-          nev
-          {bull}o{bull}
-          lent
-        </Typography>
-        <Typography color="textSecondary">
-          adjective
-        </Typography>
-        <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
+          {props.away} @ {props.home}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button size="small"><ExpandMoreIcon/> SPOILERS</Button>
       </CardActions>
     </Card>
   );
