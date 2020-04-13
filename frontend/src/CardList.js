@@ -45,7 +45,7 @@ export default class CardList extends React.Component {
               gamesData.slice(0,10).map((game, rank) => {
                 const {home, away} = game;
                 return (
-                  <ListItem>
+                  <ListItem key={rank}>
                     <Card rank={rank+1} home={home} away={away}/>
                   </ListItem>
                 )})
