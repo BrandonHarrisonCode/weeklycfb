@@ -39,7 +39,6 @@ export default class CardList extends React.Component {
     const {loading, gamesData} = this.state;
     return (
       <Paper elevation={3} className="cardList">
-        <Typography variant="h3" gutterBottom> CFB Game of the Week </Typography>
         <List>
           {
             loading ? "loading..." : 

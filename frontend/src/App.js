@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import CardList from './CardList'
+import FrontPage from './FrontPage'
 
 function App() {
   return (
-    <CardList />
+    <FrontPage />
   );
 }
 
