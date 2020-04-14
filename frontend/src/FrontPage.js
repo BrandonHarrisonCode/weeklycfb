@@ -9,7 +9,7 @@ export default class FrontPage extends React.Component {
   render() {
     return (
       <div>
-        <NavigationBar current="Home" />
+        <NavigationBar current={0} />
         <Typography variant="h3" component="h1" className="title">CFB Game of the Week</Typography>
         <CardList />
       </div>

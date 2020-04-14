@@ -33,7 +33,6 @@ export default class CardList extends React.Component {
     console.log(parsedJSON.data.length);
   }
 
-        //{this.state.loading ? <div>loading...</div> : <div>this.state.gamesData.map((game, rank) => <Card rank={rank} home="{game.home}" away="{game.away}"/>);</div>}
   render() {
     const {loading, gamesData} = this.state;
     return (
