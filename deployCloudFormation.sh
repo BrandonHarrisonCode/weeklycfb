@@ -15,6 +15,13 @@ S3_BUCKET="s3://cfbgameoftheweek.com"
 aws --version
 sam --version
 
+cd frontend
+yarn install
+yarn build
+aws s3 sync build "${S3_BUCKET}"
+aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
+cd ..
+
 # Follow the CloudFormation deploy steps using aws-sam-cli and aws-cli
 sam validate
 sam build
@@ -24,8 +31,4 @@ then
   sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE} --force-upload
 fi
 
-cd frontend
-yarn install
-yarn build
-aws s3 sync build "${S3_BUCKET}"
-aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
+
