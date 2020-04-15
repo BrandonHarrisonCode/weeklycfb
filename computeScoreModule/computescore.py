@@ -24,7 +24,7 @@ def compute_score(game):
 
 def create_plays_url(game):
     params = {'year': game['season'], 'week': game['week'], 'team': game['home_team']}
-    base = 'https://api.collegefootballdata.com/plays?seasonType=both&'
+    base = 'https://api.collegefootballdata.com/plays?seasonType=regular&'
     return base + urllib.parse.urlencode(params)
 
 
@@ -40,7 +40,7 @@ def get_plays(url):
 
 def create_vegas_line_url(game):
     params = {'year': game['season'], 'week': game['week'], 'home': game['home_team'], 'away': game['away_team']}
-    base = 'https://api.collegefootballdata.com/lines?seasonType=both&'
+    base = 'https://api.collegefootballdata.com/lines?seasonType=regular&'
     return base + urllib.parse.urlencode(params)
 
 
