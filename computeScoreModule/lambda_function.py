@@ -49,17 +49,14 @@ def get_score(game):
 def store_score(game, score, play_by_play):
     response = calculated_score_table.update_item(
             ExpressionAttributeNames={
-                "#yearweek": "year:week",
                 "#pbp": "play-by-play"
                 },
             Key={
-                '#yearweek': '{}:{}'.format(game['season'], game['week']),
+                'year:week': '{}:{}'.format(game['season'], game['week']),
                 'home': game['home_team']
                 },
             UpdateExpression='set #yearweek = :yearweek, home = :home, away = :away, score = :score, #pbp = :pbp',
             ExpressionAttributeValues={
-                ':yearweek': '{}:{}'.format(game['season'], game['week']),
-                ':home': game['home_team'],
                 ':away': game['away_team'],
                 ':score': Decimal(str(score)),
                 ':pbp': list(map(lambda x: Decimal(str(x)), play_by_play))
