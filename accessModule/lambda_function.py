@@ -36,7 +36,7 @@ def abort(message, code):
 def retrieve_game(yearweek):
     response = table.query(
                     KeyConditionExpression=Key('year:week').eq(yearweek),
-                    ProjectionExpression="score,home,away",
+                    ProjectionExpression="home,away,score",
                     ScanIndexForward=False,
                     Select="SPECIFIC_ATTRIBUTES",
                     Limit=10

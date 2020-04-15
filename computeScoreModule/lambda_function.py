@@ -20,8 +20,12 @@ def lambda_handler(event, context):
         game = json.loads(str(record["body"]))
 
     print('Game: {}'.format(game))
-    score = get_and_save_score(game)
-    print('Score: {}'.format(score))
+    title, score, play_by_play = get_score(game)
+    # Do not save the game if the dry_run flag is present
+    if not game.get('dry_run'):
+        store_score(game, score, play_by_play)
+    print('{}: {}'.format(title, score))
+    print('Play by play: {}'.format(play_by_play))
 
     return {
         'statusCode': 200
@@ -34,23 +38,27 @@ def abort(statuscode):
     }
 
 
-def get_and_save_score(game):
+def get_score(game):
     title = '{} vs. {}'.format(game['home_team'], game['away_team'])
     print(title)
     score, play_by_play = compute_score(game)
     print('Final score: {}\n\n'.format(score))
-    output = {'title': title, 'score': score}
-    store_score(game, score, play_by_play)
+    output = {'title': title, 'score': score, 'play_by_play': play_by_play}
     return output
 
 
 def store_score(game, score, play_by_play):
-    calculated_score_table.put_item(
-        Item={
-            'year:week': '{}:{}'.format(game['season'], game['week']),
-            'score': Decimal(str(score)),
-            'away': game['away_team'],
-            'home': game['home_team'],
-            'play-by-play': list(map(lambda x: Decimal(str(x)), play_by_play)),
-        }
-    )
+    response = calculated_score_table.update_item(
+            ExpressionAttributeNames={"#yearweek": "year:week"},
+            Key={
+                '#yearweek': '{}:{}'.format(game['season'], game['week']),
+                'home': game['home_team']
+                },
+            UpdateExpression='set awawy = :away, set score = :score, set play-by-play = :pbp',
+            ExpressionAttributeValues={
+                ':away': game['away_team'],
+                ':score': Decimal(str(score)),
+                ':pbp': list(map(lambda x: Decimal(str(x)), play_by_play))
+                },
+            ReturnValues='ALL_OLD'
+            )
