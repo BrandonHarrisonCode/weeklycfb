@@ -21,11 +21,11 @@ def lambda_handler(event, context):
 
     print('Game: {}'.format(game))
     title, score, play_by_play = get_score(game)
+    print('{}: {}'.format(title, score))
+    print('Play by play: {}'.format(play_by_play))
     # Do not save the game if the dry_run flag is present
     if not game.get('dry_run'):
         store_score(game, score, play_by_play)
-    print('{}: {}'.format(title, score))
-    print('Play by play: {}'.format(play_by_play))
 
     return {
         'statusCode': 200
@@ -43,8 +43,7 @@ def get_score(game):
     print(title)
     score, play_by_play = compute_score(game)
     print('Final score: {}\n\n'.format(score))
-    output = {'title': title, 'score': score, 'play_by_play': play_by_play}
-    return output
+    return title, score, play_by_play
 
 
 def store_score(game, score, play_by_play):
