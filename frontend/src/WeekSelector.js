@@ -20,7 +20,38 @@ const useStyles = theme => ({
   },
 }); 
 
+function descendingIntegerSort(array) {
+  return array.map(function(item) {
+    return parseInt(item, 10);
+  }).sort().reverse();
+}
+
 class WeekSelector extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      years: [],
+    };
+  }
+
+  async componentDidMount() {
+    this.setState({
+      years: [], 
+    });
+
+    this.fetchAvailibleWeeks();
+  }
+
+  async fetchAvailibleWeeks() {
+    const url = 'https://api.cfbgameoftheweek.com/availibleWeeks'
+    const response = await fetch(url);
+    const parsedJSON = await response.json();
+
+    this.setState({
+      years: parsedJSON.data, 
+    });
+  }
+
   handleYearChange(event) {
     this.props.handleYearChange(event.target.value);
   }
@@ -29,14 +60,16 @@ class WeekSelector extends React.Component {
     this.props.handleWeekChange(event.target.value);
   }
 
-
   render() {
     const classes = this.props.classes;
+    const years = this.state.years;
+    const weeks = this.state.years[this.props.year] ? this.state.years[this.props.year] : [];
+
     return (
       <div>
           <TextField
             select
-            value={this.props.year}
+            value={Object.keys(years).includes(this.props.year.toString()) ? this.props.year : ''}
             id="yearSelect"
             label="Year"
             variant="filled"
@@ -44,13 +77,15 @@ class WeekSelector extends React.Component {
             className={`${classes.dateSelector} ${classes.yearSelector}`}
             margin="dense"
           >
-            <MenuItem value="2019">2019</MenuItem>
-            <MenuItem value="2018">2018</MenuItem>
-            <MenuItem value="2017">2017</MenuItem>
+            {
+              descendingIntegerSort(Object.keys(years)).map(year => {
+                return <MenuItem key={year} value={year}>{year}</MenuItem>;
+              })
+            }
           </TextField>
           <TextField
             select
-            value={this.props.week}
+            value={weeks.includes(this.props.week.toString()) ? this.props.week : ''}
             id="weekSelect"
             label="Week"
             variant="filled"
@@ -58,10 +93,11 @@ class WeekSelector extends React.Component {
             className={`${classes.dateSelector} ${classes.weekSelector}`}
             margin="dense"
           >
-            <MenuItem value="1">1</MenuItem>
-            <MenuItem value="2">2</MenuItem>
-            <MenuItem value="3">3</MenuItem>
-            <MenuItem value="10">10</MenuItem>
+            {
+              descendingIntegerSort(weeks).map(week => {
+                return <MenuItem key={week} value={week}>{week}</MenuItem>;
+              })
+            }
           </TextField>
       </div>
     );

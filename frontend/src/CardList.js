@@ -32,7 +32,6 @@ export default class CardList extends React.Component {
 
   async fetchGames() {
     const url = 'https://api.cfbgameoftheweek.com/entertainmentScores?week=' + this.props.week + '&year=' + this.props.year;
-    console.log(url);
     const response = await fetch(url);
     const parsedJSON = await response.json();
 
@@ -40,8 +39,6 @@ export default class CardList extends React.Component {
       gamesData: parsedJSON.data, 
       loading: false
     });
-    console.log(parsedJSON.data);
-    console.log(parsedJSON.data.length);
   }
 
   render() {
