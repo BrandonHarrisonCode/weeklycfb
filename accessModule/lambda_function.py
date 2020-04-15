@@ -35,12 +35,13 @@ def abort(message, code):
 
 def retrieve_game(yearweek):
     response = table.query(
-                    KeyConditionExpression=Key('year:week').eq(yearweek),
-                    ProjectionExpression="home,away,score",
-                    ScanIndexForward=False,
-                    Select="SPECIFIC_ATTRIBUTES",
-                    Limit=10
-    )
+            IndexName='Score-Index'
+            KeyConditionExpression=Key('year:week').eq(yearweek),
+            ProjectionExpression="home,away,score",
+            ScanIndexForward=False,
+            Select='SPECIFIC_ATTRIBUTES',
+            Limit=10
+            )
     built_response = {
             'yearweek': yearweek,
             'data': response['Items']
