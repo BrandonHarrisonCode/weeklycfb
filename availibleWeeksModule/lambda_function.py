@@ -22,22 +22,39 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
-def retrieve_years_and_weeks():
-    response = table.scan(
-            ExpressionAttributeNames={"#yearweek": "year:week"},
-            ProjectionExpression="#yearweek",
-            Select="SPECIFIC_ATTRIBUTES"
-    )
-
+def scanDB():
     yearweeks = {}
-    for item in response['Items']:
-        yearweek = item['year:week']
-        year = item['year:week'][:yearweek.index(':')]
-        week = item['year:week'][yearweek.index(':') + 1:]
+    response = table.scan(
+                ExpressionAttributeNames={"#yearweek": "year:week"},
+                ProjectionExpression="#yearweek",
+                Select="SPECIFIC_ATTRIBUTES",
+                )
 
-        currentWeeks = yearweeks.get(year, [])
-        yearweeks[year] = currentWeeks + list(week) if week not in currentWeeks else currentWeeks
+    while True:
+        print('DynamoDB response: {}'.format(response))
 
+        for item in response['Items']:
+            yearweek = item['year:week']
+            year = item['year:week'][:yearweek.index(':')]
+            week = item['year:week'][yearweek.index(':') + 1:]
+
+            currentWeeks = yearweeks.get(year, [])
+            yearweeks[year] = currentWeeks + list(week) if week not in currentWeeks else currentWeeks
+
+        if 'LastEvaluatedKey' not in response:
+            break
+        response = table.scan(
+                ExpressionAttributeNames={"#yearweek": "year:week"},
+                ProjectionExpression="#yearweek",
+                Select="SPECIFIC_ATTRIBUTES",
+                ExclusiveStartKey: response['LastEvaluatedKey']
+                )
+
+    return yearweeks
+
+
+def retrieve_years_and_weeks():
+    yearweeks = scanDB()
     built_response = {
         'data': yearweeks
     }
