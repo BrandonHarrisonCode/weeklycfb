@@ -64,7 +64,7 @@ def get_vegas_line(game):
             print('Vegas line: {}'.format(line['spread']))
             return line['spread']
         else:
-            vegas_line_avg += line['spread']
+            vegas_line_avg += int(line['spread'])
     vegas_line = vegas_line_avg / len(lines)
     print('Vegas line: {}'.format(vegas_line))
     return vegas_line
