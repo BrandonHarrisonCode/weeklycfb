@@ -21,7 +21,18 @@ export default class CardList extends React.Component {
       loading: true
     });
  
-    const url = 'https://api.cfbgameoftheweek.com/entertainmentScores?week=1&year=2019'
+    this.fetchGames();
+  }
+
+  async componentDidUpdate(prevProps) {
+    if(prevProps.year !== this.props.year || prevProps.week !== this.props.week) {
+      this.fetchGames();
+    }
+  }
+
+  async fetchGames() {
+    const url = 'https://api.cfbgameoftheweek.com/entertainmentScores?week=' + this.props.week + '&year=' + this.props.year;
+    console.log(url);
     const response = await fetch(url);
     const parsedJSON = await response.json();
 
@@ -50,7 +61,6 @@ export default class CardList extends React.Component {
           }
         </List>
       </Paper>
-      //<Card rank="1" home="Utah State" away="Wake Forest"/>
     );
   }
 }

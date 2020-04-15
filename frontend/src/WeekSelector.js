@@ -21,24 +21,12 @@ const useStyles = theme => ({
 }); 
 
 class WeekSelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      year: 2019,
-      week: 1,
-    };
+  handleYearChange(event) {
+    this.props.handleYearChange(event.target.value);
   }
 
-  handleChangeYear(event, newValue) {
-    this.setState({
-      year: event.target.value,
-    });
-  }
-
-  handleChangeWeek(event, newValue) {
-    this.setState({
-      week: event.target.value,
-    });
+  handleWeekChange(event) {
+    this.props.handleWeekChange(event.target.value);
   }
 
 
@@ -48,11 +36,11 @@ class WeekSelector extends React.Component {
       <div>
           <TextField
             select
-            value={this.state.year}
+            value={this.props.year}
             id="yearSelect"
             label="Year"
             variant="filled"
-            onChange={this.handleChangeYear.bind(this)}
+            onChange={this.handleYearChange.bind(this)}
             className={`${classes.dateSelector} ${classes.yearSelector}`}
             margin="dense"
           >
@@ -62,11 +50,11 @@ class WeekSelector extends React.Component {
           </TextField>
           <TextField
             select
-            value={this.state.week}
+            value={this.props.week}
             id="weekSelect"
             label="Week"
             variant="filled"
-            onChange={this.handleChangeWeek.bind(this)}
+            onChange={this.handleWeekChange.bind(this)}
             className={`${classes.dateSelector} ${classes.weekSelector}`}
             margin="dense"
           >

@@ -19,13 +19,24 @@ const useStyles = theme => ({
 class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
+    this.handleYearChange = this.handleYearChange.bind(this);
+    this.handleWeekChange = this.handleWeekChange.bind(this);
+
     this.state = {
       current: props.current,
       anchorEl: null,
     };
   }
 
-  handleChange(event, newValue) {
+  handleYearChange(value) {
+    this.props.handleYearChange(value);
+  }
+
+  handleWeekChange(value) {
+    this.props.handleWeekChange(value);
+  }
+
+  handlePageChange(event, newValue) {
     console.log(newValue);
     this.setState({
       current: newValue,
@@ -38,11 +49,16 @@ class NavigationBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" style={{ backgroundColor: '#084c61' }}>
           <Toolbar>
-            <Tabs value={this.state.current} onChange={this.handleChange.bind(this)} aria-label="page navigation" className={classes.pageTabs}>
+            <Tabs value={this.state.current} onChange={this.handlePageChange.bind(this)} aria-label="page navigation" className={classes.pageTabs}>
               <Tab label="Home" />
               <Tab label="About" />
             </Tabs>
-            <WeekSelector />
+            <WeekSelector 
+              year={this.props.year}
+              week={this.props.week}
+              handleYearChange={this.handleYearChange} 
+              handleWeekChange={this.handleWeekChange}
+            />
           </Toolbar>
         </AppBar>
       </div>
