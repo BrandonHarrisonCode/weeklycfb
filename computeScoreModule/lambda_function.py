@@ -55,7 +55,7 @@ def store_score(game, score, play_by_play):
                 'year:week': '{}:{}'.format(game['season'], game['week']),
                 'home': game['home_team']
                 },
-            UpdateExpression='set #yearweek = :yearweek, home = :home, away = :away, score = :score, #pbp = :pbp',
+            UpdateExpression='set away = :away, score = :score, #pbp = :pbp',
             ExpressionAttributeValues={
                 ':away': game['away_team'],
                 ':score': Decimal(str(score)),
