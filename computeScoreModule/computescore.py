@@ -39,9 +39,9 @@ def get_plays(url):
 
 
 def create_vegas_line_url(game):
-    base = 'https://api.collegefootballdata.com/lines?seasonType=both&year={}&week={}&home={}&away={}'
-    url = base.format(game['season'], game['week'], game['home_team'], game['away_team'])
-    return url
+    params = {'year': game['season'], 'week': game['week'], 'home': game['home_team'], 'away': game['away_team']}
+    base = 'https://api.collegefootballdata.com/lines?seasonType=both&'
+    return base + urllib.parse.urlencode(params)
 
 
 def get_vegas_line(game):
@@ -62,12 +62,12 @@ def get_vegas_line(game):
     for line in lines:
         if line['provider'] == 'consensus':
             print('Vegas line: {}'.format(line['spread']))
-            return line['spread']
+            return float(line['spread'])
         else:
-            vegas_line_avg += int(line['spread'])
+            vegas_line_avg += float(line['spread'])
     vegas_line = vegas_line_avg / len(lines)
     print('Vegas line: {}'.format(vegas_line))
-    return vegas_line
+    return float(vegas_line)
 
 
 def compute_win_probabilities(plays, home_team, vegas_line):

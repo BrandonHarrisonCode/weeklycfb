@@ -12,15 +12,16 @@ calculated_score_table = dynamodb.Table(calculated_scores_table_name)
 
 
 def lambda_handler(event, context):
+    print('Recieved event: {}'.format(json.dumps(event, indent=2)))
     records = event['Records']
     if len(records) > 1:
         return abort(400)
     for record in event['Records']:
         game = json.loads(str(record["body"]))
 
-    print(game)
+    print('Game: {}'.format(game))
     score = get_and_save_score(game)
-    print(score)
+    print('Score: {}'.format(score))
 
     return {
         'statusCode': 200
