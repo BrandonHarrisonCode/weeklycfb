@@ -47,7 +47,7 @@ def scanDB():
                 ExpressionAttributeNames={"#yearweek": "year:week"},
                 ProjectionExpression="#yearweek",
                 Select="SPECIFIC_ATTRIBUTES",
-                ExclusiveStartKey: response['LastEvaluatedKey']
+                ExclusiveStartKey=response['LastEvaluatedKey']
                 )
 
     return yearweeks
