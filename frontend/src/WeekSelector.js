@@ -2,9 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import 'typeface-roboto';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-//import InputLabel from '@material-ui/core/InputLabel';
-//import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
 const useStyles = theme => ({
