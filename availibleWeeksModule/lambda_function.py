@@ -2,6 +2,7 @@ import os
 import boto3
 import json
 import decimal
+import collections
 
 from boto3.dynamodb.conditions import Key, Attr
 
@@ -23,7 +24,7 @@ class DecimalEncoder(json.JSONEncoder):
 
 
 def scanDB():
-    yearweeks = {}
+    yearweeks = collections.defaultdict(list)
     response = table.scan(
                 ExpressionAttributeNames={"#yearweek": "year:week"},
                 ProjectionExpression="#yearweek",
@@ -37,9 +38,7 @@ def scanDB():
             yearweek = item['year:week']
             year = item['year:week'][:yearweek.index(':')]
             week = item['year:week'][yearweek.index(':') + 1:]
-
-            currentWeeks = yearweeks.get(year, [])
-            yearweeks[year] = currentWeeks + list(week) if week not in currentWeeks else currentWeeks
+            yearweeks[year].append(week)
 
         if 'LastEvaluatedKey' not in response:
             break
