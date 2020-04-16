@@ -26,10 +26,11 @@ class DecimalEncoder(json.JSONEncoder):
 def scanDB():
     yearweeks = collections.defaultdict(set)
     response = table.scan(
-                ExpressionAttributeNames={"#yearweek": "year:week"},
-                ProjectionExpression="#yearweek",
-                Select="SPECIFIC_ATTRIBUTES",
-                )
+            IndexName="YearWeek-Index",
+            ExpressionAttributeNames={"#yearweek": "year:week"},
+            ProjectionExpression="#yearweek",
+            Select="SPECIFIC_ATTRIBUTES",
+            )
 
     while True:
         print('DynamoDB response: {}'.format(response))
@@ -43,11 +44,12 @@ def scanDB():
         if 'LastEvaluatedKey' not in response:
             break
         response = table.scan(
-                ExpressionAttributeNames={"#yearweek": "year:week"},
-                ProjectionExpression="#yearweek",
-                Select="SPECIFIC_ATTRIBUTES",
-                ExclusiveStartKey=response['LastEvaluatedKey']
-                )
+            IndexName="YearWeek-Index",
+            ExpressionAttributeNames={"#yearweek": "year:week"},
+            ProjectionExpression="#yearweek",
+            Select="SPECIFIC_ATTRIBUTES",
+            ExclusiveStartKey=response['LastEvaluatedKey']
+            )
 
     return {key: list(value) for key, value in yearweeks.items()}
 
