@@ -21,9 +21,7 @@ const useStyles = theme => ({
 }); 
 
 function descendingIntegerSort(array) {
-  return array.map(function(item) {
-    return parseInt(item, 10);
-  }).sort().reverse();
+  return array.sort(function(a,b) {return a - b;}).reverse();
 }
 
 class WeekSelector extends React.Component {
