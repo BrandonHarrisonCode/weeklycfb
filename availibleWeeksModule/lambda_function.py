@@ -24,7 +24,7 @@ class DecimalEncoder(json.JSONEncoder):
 
 
 def scanDB():
-    yearweeks = collections.defaultdict(list)
+    yearweeks = collections.defaultdict(set)
     response = table.scan(
                 ExpressionAttributeNames={"#yearweek": "year:week"},
                 ProjectionExpression="#yearweek",
@@ -38,7 +38,7 @@ def scanDB():
             yearweek = item['year:week']
             year = item['year:week'][:yearweek.index(':')]
             week = item['year:week'][yearweek.index(':') + 1:]
-            yearweeks[year].append(week)
+            yearweeks[year].add(week)
 
         if 'LastEvaluatedKey' not in response:
             break
