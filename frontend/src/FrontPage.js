@@ -1,11 +1,21 @@
 import React from 'react';
-import 'typeface-roboto';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import './FrontPage.css'
-import NavigationBar from './NavigationBar';
+//import './FrontPage.css'
+import TabPanel from './TabPanel';
+import WeekSelector from './WeekSelector'
 import CardList from './CardList';
 
-export default class FrontPage extends React.Component {
+const useStyles = theme => ({
+  title: {
+    padding: '1em 5px 5px 1em',
+    color: '#4f6d7a',
+  },
+}); 
+
+
+class FrontPage extends TabPanel {
   constructor(props) {
     super(props);
     this.handleYearChange = this.handleYearChange.bind(this);
@@ -26,21 +36,30 @@ export default class FrontPage extends React.Component {
   }
 
   render() {
+    const classes = this.props.classes;
     const year = this.state.year;
     const week = this.state.week;
 
     return (
-      <div>
-        <NavigationBar 
-          current={0} 
-          year={this.state.year}
-          week={this.state.week}
-          handleYearChange={this.handleYearChange} 
-          handleWeekChange={this.handleWeekChange}
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+       <Typography variant="h3" component="h1" className={classes.title}>CFB Game of the Week</Typography>
+        <WeekSelector 
+              year={this.state.year}
+              week={this.state.week}
+              handleYearChange={this.handleYearChange} 
+              handleWeekChange={this.handleWeekChange}
         />
-        <Typography variant="h3" component="h1" className="title">CFB Game of the Week</Typography>
         <CardList year={year} week={week}/>
-      </div>
+      </Grid>
     );
   }
 }
+
+export default withStyles(useStyles)(FrontPage);

@@ -70,7 +70,6 @@ class WeekSelector extends React.Component {
             value={Object.keys(years).includes(this.props.year.toString()) ? this.props.year : ''}
             id="yearSelect"
             label="Year"
-            variant="filled"
             onChange={this.handleYearChange.bind(this)}
             className={`${classes.dateSelector} ${classes.yearSelector}`}
             margin="dense"
@@ -86,7 +85,6 @@ class WeekSelector extends React.Component {
             value={weeks.includes(this.props.week.toString()) ? this.props.week : ''}
             id="weekSelect"
             label="Week"
-            variant="filled"
             onChange={this.handleWeekChange.bind(this)}
             className={`${classes.dateSelector} ${classes.weekSelector}`}
             margin="dense"
