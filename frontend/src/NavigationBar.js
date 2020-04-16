@@ -18,17 +18,15 @@ const useStyles = theme => ({
 class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
+    this.handleTabChange = this.handleTabChange.bind(this);
+
     this.state = {
-      current: props.current,
       anchorEl: null,
     };
   }
 
-  handlePageChange(event, newValue) {
-    console.log(newValue);
-    this.setState({
-      current: newValue,
-    });
+  handleTabChange(event, newValue) {
+    this.props.handleTabChange(newValue)
   }
 
   render() {
@@ -37,9 +35,9 @@ class NavigationBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" style={{ backgroundColor: '#084c61' }}>
           <Toolbar>
-            <Tabs value={this.state.current} onChange={this.handlePageChange.bind(this)} aria-label="page navigation" className={classes.pageTabs}>
-              <Tab label="Home" />
-              <Tab label="About" />
+            <Tabs value={this.props.tabName} onChange={this.handleTabChange.bind(this)} aria-label="page navigation" className={classes.pageTabs}>
+              <Tab label="Home" value="Home"/>
+              <Tab label="About" value="About"/>
             </Tabs>
                       </Toolbar>
         </AppBar>

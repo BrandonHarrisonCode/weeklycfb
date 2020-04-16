@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-//import './FrontPage.css'
 import TabPanel from './TabPanel';
 import WeekSelector from './WeekSelector'
 import CardList from './CardList';
@@ -40,6 +39,9 @@ class FrontPage extends TabPanel {
     const year = this.state.year;
     const week = this.state.week;
 
+    if(this.props.currentTabName !== this.props.tabName) {
+      return null;
+    }
     return (
       <Grid
         container
@@ -47,7 +49,6 @@ class FrontPage extends TabPanel {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
       >
        <Typography variant="h3" component="h1" className={classes.title}>CFB Game of the Week</Typography>
         <WeekSelector 
