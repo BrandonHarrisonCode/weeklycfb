@@ -49,7 +49,7 @@ def scanDB():
                 ExclusiveStartKey=response['LastEvaluatedKey']
                 )
 
-    return yearweeks
+    return {key: list(value) for key, value in yearweeks.items()}
 
 
 def retrieve_years_and_weeks():
