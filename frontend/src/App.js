@@ -26,7 +26,7 @@ class App extends React.Component {
           handleTabChange={this.handleTabChange}
         />
         <FrontPage tabName="Home" currentTabName={this.state.currentTabName}/>
-        <AboutPage tabName="Home" currentTabName={this.state.currentTabName}/>
+        <AboutPage tabName="About" currentTabName={this.state.currentTabName}/>
       </div>
     );
   }

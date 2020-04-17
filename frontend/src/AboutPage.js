@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import TabPanel from './TabPanel';
 
 const useStyles = theme => ({
@@ -16,6 +17,9 @@ class AboutPage extends TabPanel {
   render() {
     const classes = this.props.classes;
 
+    if(this.props.currentTabName !== this.props.tabName) {
+      return null;
+    }
     return (
       <Grid
         container
@@ -24,7 +28,12 @@ class AboutPage extends TabPanel {
         alignItems="center"
         justify="center"
       >
-       <Typography variant="h3" component="h1" className={classes.title}>About</Typography>
+        <Typography variant="h3" component="h1" className={classes.title}>About</Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          Created by <Link href="https://github.com/BrandonHarrisonCode">Brandon Harrison</Link> and <Link href="https://github.com/andmcadams">Andrew McAdams</Link>
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+        </Typography>
       </Grid>
     );
   }
