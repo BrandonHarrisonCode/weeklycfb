@@ -1,40 +1,92 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import TabPanel from './TabPanel';
+import Markdown from './Markdown';
+import Sidebar from './Sidebar';
+import aboutPageContent from './About.md';
+import detailedContent from './AboutDetailed.md';
 
 const useStyles = theme => ({
+  markdown: {
+    ...theme.typography.body1,
+    padding: theme.spacing(3, 0),
+  },
+   markdownDetailed: {
+    ...theme.typography.body2,
+    padding: theme.spacing(3, 0),
+  },
   title: {
-    padding: '1em 5px 5px 1em',
     color: '#4f6d7a',
+  },
+  mainGrid: {
+    marginTop: theme.spacing(5),
   },
 }); 
 
+const sidebar = {
+  title: 'About Us',
+  description:
+    'This project was created by Brandon Harrison and Andrew McAdams.',
+  social: [
+    { name: 'GitHub', icon: GitHubIcon, url: 'https://github.com/BrandonHarrisonCode/weeklycfb' },
+  ],
+};
 
 class AboutPage extends TabPanel {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      content: null,
+      detailedContent: null
+    };
+  }
+
+  componentDidMount() {
+    fetch(aboutPageContent).then((response) => response.text()).then((text) => {
+      this.setState({ content: text })
+    })
+    fetch(detailedContent).then((response) => response.text()).then((text) => {
+      this.setState({ detailedContent: text })
+    })
+  }
+
   render() {
     const classes = this.props.classes;
+    const content = this.state.content;
+    const detailedContent = this.state.detailedContent;
 
     if(this.props.currentTabName !== this.props.tabName) {
       return null;
     }
     return (
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-      >
-        <Typography variant="h3" component="h1" className={classes.title}>About</Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          Created by <Link href="https://github.com/BrandonHarrisonCode">Brandon Harrison</Link> and <Link href="https://github.com/andmcadams">Andrew McAdams</Link>
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-        </Typography>
-      </Grid>
+      <Container maxWidth="lg">
+        <Grid container spacing={4} className={classes.mainGrid}>
+          <Grid item xs={12} md={8}>
+            <Typography variant="h3" component="h1" className={classes.title}>
+              About the Site
+            </Typography>
+            <Divider />
+            <Markdown className={classes.markdown}>
+              {content}
+            </Markdown>
+            <Divider />
+            <Markdown className={classes.markdownDetailed}>
+              {detailedContent}
+            </Markdown>
+          </Grid>
+          <Sidebar
+            title={sidebar.title}
+            description={sidebar.description}
+            social={sidebar.social}
+          />
+        </Grid>
+      </Container>
     );
   }
 }
