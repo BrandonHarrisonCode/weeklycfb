@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import NavigationBar from './NavigationBar';
 
 describe("NaviagtionBar", () => {
-  let wrapper;
   let mockTabChange;
 
   beforeEach(() => {

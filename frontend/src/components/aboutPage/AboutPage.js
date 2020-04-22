@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import TabPanel from '../common/TabPanel';
-import Sidebar from './Sidebar';
+import Sidebar from './sidebar';
 
 import Markdown from '../common/Markdown';
 import aboutPageContent from './markdown/About.md';
@@ -35,7 +35,7 @@ const useStyles = theme => ({
 const sidebar = {
   title: 'About Us',
   description:
-    'This project was created by Brandon Harrison and Andrew McAdams.',
+    'This project was created by Brandon Harrison with help from Andrew McAdams for the initial portion of the project.',
   social: [
     { name: 'GitHub', icon: GitHubIcon, url: 'https://github.com/BrandonHarrisonCode/weeklycfb' },
   ],
