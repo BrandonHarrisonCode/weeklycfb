@@ -28,7 +28,7 @@ sam build
 sam package --output-template-file packaged.yml --s3-bucket cfb-game-of-the-week-zip-files
 if [[ "${TRAVIS_BRANCH}" == "master" ]]
 then
-  sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE} --force-upload
+  sam deploy --template-file packaged.yml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides DeploymentStage=${DEPLOYMENT_STAGE} --force-upload --no-fail-on-empty-changeset
 fi
 
 
