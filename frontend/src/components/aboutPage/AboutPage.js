@@ -46,8 +46,8 @@ class AboutPage extends TabPanel {
     super(props)
 
     this.state = {
-      content: null,
-      detailedContent: null
+      content: "",
+      detailedContent: "",
     };
   }
 

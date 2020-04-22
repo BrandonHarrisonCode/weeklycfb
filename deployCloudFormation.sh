@@ -18,6 +18,7 @@ sam --version
 cd frontend
 yarn install
 yarn build
+yarn test
 aws s3 sync build "${S3_BUCKET}"
 aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
 cd ..
