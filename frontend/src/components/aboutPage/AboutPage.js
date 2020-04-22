@@ -1,15 +1,19 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+
 import GitHubIcon from '@material-ui/icons/GitHub';
+
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import TabPanel from './TabPanel';
-import Markdown from './Markdown';
+
+import TabPanel from '../common/TabPanel';
 import Sidebar from './Sidebar';
-import aboutPageContent from './About.md';
-import detailedContent from './AboutDetailed.md';
+
+import Markdown from '../common/Markdown';
+import aboutPageContent from './markdown/About.md';
+import detailedContent from './markdown/AboutDetailed.md';
 
 const useStyles = theme => ({
   markdown: {

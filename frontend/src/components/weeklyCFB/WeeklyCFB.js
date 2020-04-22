@@ -1,10 +1,10 @@
 import React from 'react';
-import './App.css';
-import NavigationBar from './NavigationBar';
-import FrontPage from './FrontPage'
-import AboutPage from './AboutPage'
+import './WeeklyCFB.css';
+import NavigationBar from '../navBar/';
+import FrontPage from '../frontPage/'
+import AboutPage from '../aboutPage/'
 
-class App extends React.Component {
+class WeeklyCFB extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -32,4 +32,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default WeeklyCFB;
