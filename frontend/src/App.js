@@ -20,14 +20,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <NavigationBar 
           tabName={this.state.currentTabName} 
           handleTabChange={this.handleTabChange}
         />
         <FrontPage tabName="Home" currentTabName={this.state.currentTabName}/>
         <AboutPage tabName="About" currentTabName={this.state.currentTabName}/>
-      </div>
+      </React.Fragment>
     );
   }
 }
