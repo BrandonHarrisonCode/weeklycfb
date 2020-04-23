@@ -59,6 +59,13 @@ class FrontPage extends TabPanel {
           >
             CFB Game of the Week
           </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            gutterBottom
+          >
+            A site that ranks the top college football games of the week by how entertaining they are to watch.
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <WeekSelector 
