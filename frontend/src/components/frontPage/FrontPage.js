@@ -8,7 +8,8 @@ import CardList from './cards/CardList';
 
 const useStyles = theme => ({
   title: {
-    padding: '1em 5px 5px 1em',
+    margin: '1em .2em .2em .2em',
+    textAlign: 'center',
     color: '#4f6d7a',
   },
 }); 
@@ -48,16 +49,22 @@ class FrontPage extends TabPanel {
         spacing={0}
         direction="column"
         alignItems="center"
-        justify="center"
+        justify="flex-start"
       >
-       <Typography variant="h3" component="h1" className={classes.title}>CFB Game of the Week</Typography>
-        <WeekSelector 
-              year={this.state.year}
-              week={this.state.week}
-              handleYearChange={this.handleYearChange} 
-              handleWeekChange={this.handleWeekChange}
-        />
-        <CardList year={year} week={week}/>
+        <Grid item xs={12}>
+          <Typography variant="h2" component="h1" className={classes.title}>CFB Game of the Week</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <WeekSelector 
+            year={this.state.year}
+            week={this.state.week}
+            handleYearChange={this.handleYearChange} 
+            handleWeekChange={this.handleWeekChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <CardList year={year} week={week}/>
+        </Grid>
       </Grid>
     );
   }
