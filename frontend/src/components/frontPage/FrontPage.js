@@ -9,7 +9,6 @@ import CardList from './cards/CardList';
 const useStyles = theme => ({
   title: {
     margin: '1em .2em .2em .2em',
-    textAlign: 'center',
     color: '#4f6d7a',
   },
 }); 
@@ -52,7 +51,14 @@ class FrontPage extends TabPanel {
         justify="flex-start"
       >
         <Grid item xs={12}>
-          <Typography variant="h2" component="h1" className={classes.title}>CFB Game of the Week</Typography>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            className={classes.title}
+            align="center"
+          >
+            CFB Game of the Week
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <WeekSelector 
