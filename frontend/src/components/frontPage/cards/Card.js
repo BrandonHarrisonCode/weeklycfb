@@ -14,7 +14,7 @@ export default function SimpleCard(props) {
     <Card elevation={2} className="card">
       <CardContent>
         <Typography color="textSecondary" gutterBottom>
-          {props.rank}.
+          {props.rank === 1 ? props.rank + ". Top game of the week." : props.rank + "."}
         </Typography>
         <Grid
           container
