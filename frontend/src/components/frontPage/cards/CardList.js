@@ -21,7 +21,12 @@ class CardList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.controller = new AbortController();
+    this.signal = this.controller.signal;
+
     this.handleErrorClose = this.handleErrorClose.bind(this);
+    this.fetchGames = this.fetchGames.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
 
     this.state = {
       loading: true,
@@ -57,12 +62,13 @@ class CardList extends React.Component {
   }
 
   async fetchGames() {
+    const signal = this.signal;
     this.setState({
       loading: true
     });
 
     const url = 'https://api.cfbgameoftheweek.com/entertainmentScores?week=' + this.props.week + '&year=' + this.props.year;
-    fetch(url)
+    fetch(url, {signal})
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error while downloading data about the week.');
@@ -77,6 +83,10 @@ class CardList extends React.Component {
         });
       })
     .catch((error) => {
+      if(error.name === "AbortError") {
+        return;
+      }
+
       console.error('Unable to access the api at:', url);
       this.setState({
         loading: false,
@@ -114,6 +124,10 @@ class CardList extends React.Component {
         </List>
       </Paper>
     );
+  }
+
+  componentWillUnmount() {
+    this.controller.abort();
   }
 }
 

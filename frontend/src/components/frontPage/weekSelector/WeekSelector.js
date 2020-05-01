@@ -27,6 +27,13 @@ function descendingIntegerSort(array) {
 class WeekSelector extends React.Component {
   constructor(props) {
     super(props);
+
+    this.controller = new AbortController();
+    this.signal = this.controller.signal;
+
+    this.fetchAvailibleWeeks = this.fetchAvailibleWeeks.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+
     this.state = {
       years: [],
     };
@@ -41,14 +48,29 @@ class WeekSelector extends React.Component {
   }
 
   async fetchAvailibleWeeks() {
-    const url = 'https://api.cfbgameoftheweek.com/availibleWeeks'
-    const response = await fetch(url);
-    const parsedJSON = await response.json();
+    const signal = this.signal;
 
-    this.setState({
-      years: parsedJSON.data, 
+    const url = 'https://api.cfbgameoftheweek.com/availibleWeeks'
+    fetch(url, {signal})
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error while accessing information about the available weeks.');
+        }
+        return response.json();
+      })
+      .then((parsedJSON) => {
+        this.setState({
+          years: parsedJSON.data, 
+        });
+      })
+    .catch((error) => {
+      if(error.name === "AbortError") {
+        return;
+      }
+
+      console.error('Unable to access the api at:', url);
     });
-  }
+ }
 
   handleYearChange(event) {
     this.props.handleYearChange(event.target.value);
@@ -97,6 +119,10 @@ class WeekSelector extends React.Component {
           </TextField>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    this.controller.abort();
   }
 }
 
