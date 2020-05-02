@@ -3,3 +3,4 @@ venv/
 function.zip
 .aws-sam/
 packaged.yml
+node_modules/

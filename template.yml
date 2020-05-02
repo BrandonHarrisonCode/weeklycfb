@@ -106,6 +106,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: accessModule/
+      Handler: 'access_module.handle_access'
       Description: Gets and returns a week of entertainment scores and games for a season.
       Environment:
         Variables:
