@@ -48,5 +48,6 @@ class Database:
         calculated_scores_table_name = os.environ['CalculatedScoresTableName']
         dynamodb = boto3.resource('dynamodb')
         database = dynamodb.Table(calculated_scores_table_name)
+        database.load()
 
         return database
