@@ -85,6 +85,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: availibleWeeksModule/
+      Handler: 'availible_weeks_module.handle_request'
       Description: Returns a list of years and weeks that the database currently holds.
       Environment:
         Variables:
