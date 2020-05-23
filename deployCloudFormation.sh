@@ -21,7 +21,7 @@ pytest --version
 sam validate
 pytest
 
-yarn --cwd frontend install
+yarn --cwd frontend install --ignore-engines
 yarn --cwd frontend test
 yarn --cwd frontend build
 aws s3 sync frontend/build "${S3_BUCKET}"
