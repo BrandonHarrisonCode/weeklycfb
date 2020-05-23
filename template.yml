@@ -39,10 +39,12 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: computeWeekModule/
+      Handler: 'compute_week_module.compute_week'
       Description: Translates one week of games into several seperate games in a SQS queue.
       Environment:
         Variables:
           QueueUrl: !Ref GamesQueue
+          APIUrl: "https://api.collegefootballdata.com/games?seasonType=both&year={}&week={}"
       FunctionName: !Join [ '-', [ !If [IsDevelopment, !Ref "AWS::StackName", !Ref DeploymentStage], 'ComputeWeekLambda' ] ]
       Policies:
         - SQSSendMessagePolicy:

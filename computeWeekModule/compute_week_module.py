@@ -3,23 +3,32 @@ import requests
 import json
 import boto3
 
+
 sqs = boto3.client('sqs')
-queue_url = os.environ['QueueUrl']
 
 
-def lambda_handler(event, context):
+def compute_week(event, context):
+    if not all(key in event for key in ('year', 'week')):
+        print('Bad request: {}'.format(event))
+        return abort('Bad Request', 400)
+
     year = int(event['year'])
     week = int(event['week'])
-    base = 'https://api.collegefootballdata.com/games?seasonType=both&year={}&week={}'
-    url = base.format(year, week)
+    url = os.environ['APIUrl'].format(year, week)
     try:
         games = get_games(url)
     except IOError as e:
         print(e)
-        return abort(500)
+        return abort('Could not access the api at {}'.format(url), 500)
     except ValueError as e:
         print(e)
-        return abort(400)
+        return abort('No college football games during Year {} and Week {}.'.format(year, week), 400)
+
+    if event.get('dryrun') == True:
+        print('Run is dry run, aborting message to queue.')
+        return {
+                'statusCode': 200
+        }
 
     try:
         push_messages(year, week, games)
@@ -32,9 +41,14 @@ def lambda_handler(event, context):
     }
 
 
-def abort(statuscode):
+def abort(message, code):
     return {
-        'statusCode': statuscode
+            'isBase64Encoded': False,
+            'statusCode': code,
+            'headers': {
+                    "Access-Control-Allow-Origin": "*"
+            },
+            'body': json.dumps(message)
     }
 
 
@@ -62,7 +76,7 @@ def push_messages(year, week, games):
     for game in games:
         print('Pushing year {} week {} to queue with data: {}'.format(year, week, game))
         response = sqs.send_message(
-            QueueUrl=queue_url,
+            QueueUrl=os.environ['QueueUrl'],
             MessageBody=json.dumps(game),
         )
         if not response:
