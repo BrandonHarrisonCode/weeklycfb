@@ -1,14 +1,19 @@
 import requests
 import json
 import urllib
-from win_probability import play_win_probability, pregame_win_probability, postgame_win_probability, moving_average
+from win_probability import (
+    play_win_probability,
+    pregame_win_probability,
+    postgame_win_probability,
+    moving_average,
+)
 from operator import itemgetter
 
 
 def compute_score(game):
     url = create_plays_url(game)
-    print('URL for play data: {}'.format(url))
-    home_team = game['home_team']
+    print("URL for play data: {}".format(url))
+    home_team = game["home_team"]
     vegas_line = get_vegas_line(game)
 
     plays = get_plays(url)
@@ -23,50 +28,55 @@ def compute_score(game):
 
 
 def create_plays_url(game):
-    params = {'year': game['season'], 'week': game['week'], 'team': game['home_team']}
-    base = 'https://api.collegefootballdata.com/plays?seasonType=regular&'
+    params = {"year": game["season"], "week": game["week"], "team": game["home_team"]}
+    base = "https://api.collegefootballdata.com/plays?seasonType=regular&"
     return base + urllib.parse.urlencode(params)
 
 
 def get_plays(url):
     result = requests.get(url)
     if not result.ok:
-        raise IOError('Could not access API')
+        raise IOError("Could not access API")
     plays = json.loads(result.content)
     if len(plays) == 0:
-        raise ValueError('No plays found at {}'.format(url))
-    return sorted(plays, key=itemgetter('id'))
+        raise ValueError("No plays found at {}".format(url))
+    return sorted(plays, key=itemgetter("id"))
 
 
 def create_vegas_line_url(game):
-    params = {'year': game['season'], 'week': game['week'], 'home': game['home_team'], 'away': game['away_team']}
-    base = 'https://api.collegefootballdata.com/lines?seasonType=regular&'
+    params = {
+        "year": game["season"],
+        "week": game["week"],
+        "home": game["home_team"],
+        "away": game["away_team"],
+    }
+    base = "https://api.collegefootballdata.com/lines?seasonType=regular&"
     return base + urllib.parse.urlencode(params)
 
 
 def get_vegas_line(game):
     url = create_vegas_line_url(game)
-    print('URL for line data: {}'.format(url))
+    print("URL for line data: {}".format(url))
 
     result = requests.get(url)
     if not result.ok:
-        print('Could not load betting lines')
+        print("Could not load betting lines")
         return 0
     content = json.loads(result.content)[0]
-    lines = content.get('lines')
+    lines = content.get("lines")
     if lines is None or len(lines) == 0:
-        print('No betting lines stored for play')
+        print("No betting lines stored for play")
         return 0
 
     vegas_line_avg = 0
     for line in lines:
-        if line['provider'] == 'consensus':
-            print('Vegas line: {}'.format(line['spread']))
-            return float(line['spread'])
+        if line["provider"] == "consensus":
+            print("Vegas line: {}".format(line["spread"]))
+            return float(line["spread"])
         else:
-            vegas_line_avg += float(line['spread'])
+            vegas_line_avg += float(line["spread"])
     vegas_line = vegas_line_avg / len(lines)
-    print('Vegas line: {}'.format(vegas_line))
+    print("Vegas line: {}".format(vegas_line))
     return float(vegas_line)
 
 

@@ -21,42 +21,42 @@ class DecimalEncoder(json.JSONEncoder):
 
 class Database:
     def __init__(self):
-        self.database = self.get_database()
+        self._database = self._get_database()
 
-    def scanDB(self):
-        yearweeks = collections.defaultdict(set)
-        response = self.database.scan(
-                IndexName="YearWeek-Index",
-                ExpressionAttributeNames={"#yearweek": "year:week"},
-                ProjectionExpression="#yearweek",
-                Select="SPECIFIC_ATTRIBUTES",
-                )
-
-        while True:
-            print('DynamoDB response: {}'.format(response))
-
-            for item in response['Items']:
-                yearweek = item['year:week']
-                year = item['year:week'][:yearweek.index(':')]
-                week = item['year:week'][yearweek.index(':') + 1:]
-                yearweeks[year].add(week)
-
-            if 'LastEvaluatedKey' not in response:
-                break
-            response = self.database.scan(
-                IndexName="YearWeek-Index",
-                ExpressionAttributeNames={"#yearweek": "year:week"},
-                ProjectionExpression="#yearweek",
-                Select="SPECIFIC_ATTRIBUTES",
-                ExclusiveStartKey=response['LastEvaluatedKey']
-                )
-
-        return {key: list(value) for key, value in yearweeks.items()}
-
-    def get_database(self):
-        calculated_scores_table_name = os.environ['CalculatedScoresTableName']
-        dynamodb = boto3.resource('dynamodb')
+    def _get_database(self):
+        calculated_scores_table_name = os.environ["CalculatedScoresTableName"]
+        dynamodb = boto3.resource("dynamodb")
         database = dynamodb.Table(calculated_scores_table_name)
         database.load()
 
         return database
+
+    def test(self):
+        yearweeks = collections.defaultdict(set)
+        response = self._database.scan(
+            IndexName="YearWeek-Index",
+            ExpressionAttributeNames={"#yearweek": "year:week"},
+            ProjectionExpression="#yearweek",
+            Select="SPECIFIC_ATTRIBUTES",
+        )
+
+        while True:
+            print("DynamoDB response: {}".format(response))
+
+            for item in response["Items"]:
+                yearweek = item["year:week"]
+                year = item["year:week"][: yearweek.index(":")]
+                week = item["year:week"][yearweek.index(":") + 1:]
+                yearweeks[year].add(week)
+
+            if "LastEvaluatedKey" not in response:
+                break
+            response = self._database.scan(
+                IndexName="YearWeek-Index",
+                ExpressionAttributeNames={"#yearweek": "year:week"},
+                ProjectionExpression="#yearweek",
+                Select="SPECIFIC_ATTRIBUTES",
+                ExclusiveStartKey=response["LastEvaluatedKey"],
+            )
+
+        return {key: list(value) for key, value in yearweeks.items()}

@@ -20,8 +20,8 @@ yarn --version
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
   pip3 install -r ${folder}/requirements.txt
+  pytest ${folder}
 done
-pytest
 
 yarn --cwd frontend install --ignore-engines
 yarn --cwd frontend test
