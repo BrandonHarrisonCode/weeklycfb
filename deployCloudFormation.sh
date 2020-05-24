@@ -16,7 +16,6 @@ python --version
 aws --version
 sam --version
 yarn --version
-pytest --version
 
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
@@ -24,6 +23,7 @@ for folder in $(find . -type d -name \*Module) ; do
   python3 -m venv venv
   source venv/bin/activate
   python3 -m pip install -r requirements.txt
+  python3 -m pip install pytest
   pytest  
   deactivate
   cd .. 
