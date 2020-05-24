@@ -21,9 +21,9 @@ pytest --version
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
   cd $folder 
-  python -m venv venv
+  python3 -m venv venv
   source venv/bin/activate
-  pip install -r requirements.txt
+  pip3 install -r requirements.txt
   pytest  
   deactivate
   cd .. 
