@@ -16,7 +16,7 @@ def get_expected_points(down, yards_to_goal, distance):
     yards_to_goal = str(validate_yards_to_goal(yards_to_goal))
     distance = str(validate_distance(distance))
 
-    response = table.get_item(Key={"YardsToGoal": Decimal(yards_to_goal), })
+    response = table.get_item(Key={"YardsToGoal": Decimal(yards_to_goal),})
     ans = response["Item"][distance]
     return ans
 

@@ -46,7 +46,7 @@ class Database:
             for item in response["Items"]:
                 yearweek = item["year:week"]
                 year = item["year:week"][: yearweek.index(":")]
-                week = item["year:week"][yearweek.index(":") + 1:]
+                week = item["year:week"][yearweek.index(":") + 1 :]
                 yearweeks[year].add(week)
 
             if "LastEvaluatedKey" not in response:

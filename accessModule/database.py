@@ -20,10 +20,10 @@ class DecimalEncoder(json.JSONEncoder):
 
 class Database:
     def __init__(self):
-        self.database = self.get_database()
+        self._database = self._get_database()
 
     def retrieve_game(self, yearweek):
-        response = self.database.query(
+        response = self._database.query(
             IndexName="Score-Index",
             KeyConditionExpression=Key("year:week").eq(yearweek),
             ProjectionExpression="home,away,score",
@@ -39,7 +39,7 @@ class Database:
             "body": json.dumps(built_response, cls=DecimalEncoder),
         }
 
-    def get_database(self):
+    def _get_database(self):
         calculated_scores_table_name = os.environ["CalculatedScoresTableName"]
         dynamodb = boto3.resource("dynamodb")
         database = dynamodb.Table(calculated_scores_table_name)

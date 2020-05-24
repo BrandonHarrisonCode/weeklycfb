@@ -17,6 +17,8 @@ aws --version
 sam --version
 yarn --version
 
+black --check .
+
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
   pip3 install -r ${folder}/requirements.txt
@@ -27,7 +29,6 @@ yarn --cwd frontend install --ignore-engines
 yarn --cwd frontend test
 yarn --cwd frontend build
 aws s3 sync frontend/build "${S3_BUCKET}"
-aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
 
 # Follow the CloudFormation deploy steps using aws-sam-cli and aws-cli
 sam build
