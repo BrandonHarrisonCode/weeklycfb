@@ -23,7 +23,7 @@ for folder in $(find . -type d -name \*Module) ; do
   cd $folder 
   python3 -m venv venv
   source venv/bin/activate
-  pip3 install -r requirements.txt
+  python3 -m pip install -r requirements.txt
   pytest  
   deactivate
   cd .. 
