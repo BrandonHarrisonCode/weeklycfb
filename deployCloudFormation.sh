@@ -19,7 +19,13 @@ yarn --version
 pytest --version
 
 sam validate
-pytest
+for folder in $(find . -type d -name \*Module) ; do 
+  cd $folder 
+  mkvirtualenv $(basename $(pwd))
+  pip install -r requirements.txt
+  pytest  
+  cd .. 
+done
 
 yarn --cwd frontend install --ignore-engines
 yarn --cwd frontend test
