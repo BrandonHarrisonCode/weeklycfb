@@ -1,13 +1,7 @@
 language: python
 python: "3.7"
 before_install:
-  - pip install awscli
-  - pip install aws-sam-cli
-  - pip install pytest
-  - pip install virtualenvwrapper
-  - export WORKON_HOME=~/Envs
-  - mkdir -p $WORKON_HOME
-  - source /usr/local/bin/virtualenvwrapper.sh
+  - pip install awscli aws-sam-cli pytest virtualenv
   # Repo for Yarn
   - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
   - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list

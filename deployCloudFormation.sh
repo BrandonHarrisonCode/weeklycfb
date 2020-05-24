@@ -21,9 +21,11 @@ pytest --version
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
   cd $folder 
-  mkvirtualenv $(basename $(pwd))
+  python -m venv venv
+  source venv/bin/activate
   pip install -r requirements.txt
   pytest  
+  deactivate
   cd .. 
 done
 
