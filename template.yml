@@ -55,6 +55,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: computeScoreModule/
+      Handler: 'handle_request.handle_request'
       DeadLetterQueue:
         Type: SQS
         TargetArn: !GetAtt DeadGamesQueue.Arn

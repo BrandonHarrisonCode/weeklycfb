@@ -1,7 +1,7 @@
 import requests
 import json
 import urllib
-from winprobability import play_win_probability, pregame_win_probability, postgame_win_probability, moving_average
+from win_probability import play_win_probability, pregame_win_probability, postgame_win_probability, moving_average
 from operator import itemgetter
 
 

@@ -1,5 +1,5 @@
 import numpy
-from expectedpoints import get_expected_points
+from expected_points import get_expected_points
 from math import sqrt
 from scipy.stats import norm
 

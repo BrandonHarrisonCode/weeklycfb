@@ -2,16 +2,12 @@ import os
 import requests
 import json
 import boto3
-from computescore import compute_score
+from score_calculator import compute_score
 from operator import itemgetter
 from decimal import Decimal
 
-calculated_scores_table_name = os.environ['CalculatedScoresTableName']
-dynamodb = boto3.resource('dynamodb')
-calculated_score_table = dynamodb.Table(calculated_scores_table_name)
 
-
-def lambda_handler(event, context):
+def handle_request(event, context):
     print('Recieved event: {}'.format(json.dumps(event, indent=2)))
     records = event['Records']
     if len(records) > 1:
@@ -24,7 +20,9 @@ def lambda_handler(event, context):
     print('{}: {}'.format(title, score))
     print('Play by play: {}'.format(play_by_play))
     # Do not save the game if the dry_run flag is present
-    if not game.get('dry_run'):
+    if game.get('dryrun'):
+        print('Dry run. Not saving score')
+    else:
         store_score(game, score, play_by_play)
 
     return {
@@ -47,6 +45,8 @@ def get_score(game):
 
 
 def store_score(game, score, play_by_play):
+    dynamodb = boto3.resource('dynamodb')
+    calculated_score_table = dynamodb.Table(os.environ['CalculatedScoresTableName'])
     response = calculated_score_table.update_item(
             ExpressionAttributeNames={
                 "#pbp": "play-by-play"
