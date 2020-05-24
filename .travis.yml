@@ -1,7 +1,7 @@
 language: python
 python: "3.7"
 before_install:
-  - pip3 install awscli aws-sam-cli virtualenv
+  - pip3 install awscli aws-sam-cli pytest virtualenv
   # Repo for Yarn
   - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
   - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
