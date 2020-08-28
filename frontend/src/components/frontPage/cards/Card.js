@@ -57,9 +57,6 @@ export default function SimpleCard(props) {
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions>
-        <Button size="small"><ExpandMoreIcon/> SPOILERS</Button>
-      </CardActions>
     </Card>
   );
 }
