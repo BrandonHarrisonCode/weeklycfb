@@ -75,7 +75,8 @@ def push_messages(year, week, games):
     for game in games:
         print("Pushing year {} week {} to queue with data: {}".format(year, week, game))
         response = sqs.send_message(
-            QueueUrl=os.environ["QueueUrl"], MessageBody=json.dumps(game),
+            QueueUrl=os.environ["QueueUrl"],
+            MessageBody=json.dumps(game),
         )
         if not response:
             raise IOError("Could not create a message for {}".format(game))

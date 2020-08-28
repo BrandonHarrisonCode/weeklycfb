@@ -22,7 +22,7 @@ black --check .
 sam validate
 for folder in $(find . -type d -name \*Module) ; do 
   docker build --network host -t module ${folder}
-  docker run -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY module
+  docker run --network host -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY module
 done
 
 yarn --cwd frontend install --ignore-engines
